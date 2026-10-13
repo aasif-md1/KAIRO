@@ -7,6 +7,7 @@ Verifies:
 
 import datetime
 import pytest
+import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 from kairo_api.database import Base, engine
 from kairo_api.dependencies.ownership import (
@@ -22,7 +23,7 @@ from kairo_api.models.user import Session as DbSession, User
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
 
-@pytest.fixture(autouse=True)
+@pytest_asyncio.fixture(autouse=True)
 async def init_test_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)

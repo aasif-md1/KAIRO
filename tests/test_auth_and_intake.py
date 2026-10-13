@@ -3,13 +3,14 @@
 import io
 import zipfile
 import pytest
+import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 from kairo_api.database import Base, engine
 from kairo_api.main import app
 from kairo_api.models.user import User
 
 
-@pytest.fixture(autouse=True)
+@pytest_asyncio.fixture(autouse=True)
 async def init_test_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
