@@ -44,11 +44,9 @@ jobs:
         if: failure()
         run: |
           if [ -f /tmp/pytest.log ]; then
-            echo "### Pytest Failure Details" >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            cat /tmp/pytest.log >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            while IFS= read -r line; do
-              echo "::error title=Pytest Error::$line"
-            done < /tmp/pytest.log
+            python -c "
+with open('/tmp/pytest.log') as f:
+    lines = [l.strip() for l in f if l.strip()]
+print('::error title=PytestTrace::' + ' >>> '.join(lines[-35:]))
+"
           fi
