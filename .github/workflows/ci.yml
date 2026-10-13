@@ -25,7 +25,7 @@ jobs:
           pip install -e packages/analysis
           pip install -e packages/rules
           pip install -e apps/api
-          pip install pytest pytest-asyncio httpx ruff
+          pip install pytest pytest-asyncio httpx ruff pyyaml pydantic tree-sitter tree-sitter-python tree-sitter-javascript tree-sitter-typescript aiosqlite fastapi sqlalchemy cryptography python-multipart
 
       - name: Run Ruff Linting
         run: |
@@ -37,4 +37,15 @@ jobs:
 
       - name: Run Security, Static Rule, and Tenant Isolation Tests
         run: |
-          pytest tests/ -v
+          set -o pipefail
+          pytest tests/ -v -ra --tb=short 2>&1 | tee /tmp/pytest.log
+
+      - name: Report Pytest Failure
+        if: failure()
+        run: |
+          if [ -f /tmp/pytest.log ]; then
+            echo "### Pytest Failure Details" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat /tmp/pytest.log >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
