@@ -9,38 +9,33 @@ dependencies = []
 [tool.uv.workspace]
 members = [
     "apps/api",
-    "apps/worker",
-    "apps/runner",
     "packages/analysis",
     "packages/rules",
-    "packages/model_client",
-    "packages/tester",
     "packages/findings",
-    "packages/reports",
 ]
 
 [tool.uv.sources]
 kairo-findings = { workspace = true }
+kairo-analysis = { workspace = true }
+kairo-rules = { workspace = true }
 
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+exclude = [
+    "benchmark",
+    "packages/rules/fixtures",
+    ".venv",
+]
 
 [tool.ruff.lint]
 select = [
     "E",
     "W",
     "F",
-    "I",
-    "B",
-    "C4",
-    "UP",
-    "ARG",
-    "SIM",
-    "S",
 ]
 ignore = [
-    "S101",
+    "E501",
 ]
 
 [tool.ruff.lint.isort]

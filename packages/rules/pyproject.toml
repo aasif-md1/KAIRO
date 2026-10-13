@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kairo-rules"
+version = "0.1.0"
+description = "KAIRO static security rules and test fixtures"
+requires-python = ">=3.12"
+dependencies = [
+    "pyyaml>=6.0",
+    "kairo-analysis",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["kairo_rules"]

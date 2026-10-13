@@ -14,10 +14,12 @@ dependencies = [
     "python-multipart>=0.0.9",
     "cryptography>=43.0.0",
     "kairo-findings",
+    "kairo-analysis",
 ]
 
 [tool.uv.sources]
 kairo-findings = { workspace = true }
+kairo-analysis = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]

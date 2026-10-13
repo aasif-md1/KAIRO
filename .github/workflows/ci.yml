@@ -18,21 +18,23 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install uv and dependencies
+      - name: Install dependencies
         run: |
-          pip install uv
-          uv venv
-          uv pip install -e packages/findings -e apps/api
-          uv pip install pytest pytest-asyncio httpx ruff
+          python -m pip install --upgrade pip
+          pip install -e packages/findings
+          pip install -e packages/analysis
+          pip install -e packages/rules
+          pip install -e apps/api
+          pip install pytest pytest-asyncio httpx ruff
 
       - name: Run Ruff Linting
         run: |
-          uv run ruff check .
+          ruff check apps/ packages/ tests/
 
       - name: Run Brand Guardrails Validation
         run: |
-          uv run python scripts/check_brand_rules.py
+          python scripts/check_brand_rules.py
 
-      - name: Run Security and Tenant Isolation Tests
+      - name: Run Security, Static Rule, and Tenant Isolation Tests
         run: |
-          uv run pytest tests/ -v
+          pytest tests/ -v
