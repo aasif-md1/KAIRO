@@ -25,7 +25,7 @@ jobs:
           pip install -e packages/analysis
           pip install -e packages/rules
           pip install -e apps/api
-          pip install pytest pytest-asyncio httpx ruff pyyaml pydantic tree-sitter tree-sitter-python tree-sitter-javascript tree-sitter-typescript aiosqlite fastapi sqlalchemy cryptography python-multipart
+          pip install pytest pytest-asyncio httpx ruff pyyaml pydantic tree-sitter tree-sitter-python tree-sitter-javascript tree-sitter-typescript aiosqlite fastapi sqlalchemy greenlet cryptography python-multipart
 
       - name: Run Ruff Linting
         run: |
