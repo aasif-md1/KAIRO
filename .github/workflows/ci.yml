@@ -43,10 +43,4 @@ jobs:
       - name: Report Pytest Failure
         if: failure()
         run: |
-          if [ -f /tmp/pytest.log ]; then
-            python -c "
-with open('/tmp/pytest.log') as f:
-    lines = [l.strip() for l in f if l.strip()]
-print('::error title=PytestTrace::' + ' >>> '.join(lines[-35:]))
-"
-          fi
+          python scripts/report_test_failure.py
