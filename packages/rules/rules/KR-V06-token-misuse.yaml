@@ -1,0 +1,23 @@
+id: KR-V06-token-misuse
+class: V06
+title: Insecure JWT token or session misuse
+severity: high
+languages:
+  - python
+  - javascript
+  - typescript
+frameworks:
+  - express
+  - nextjs
+  - fastapi
+  - flask
+analyzer: token_misuse
+message: "JWT signature verification disabled or insecure 'none' algorithm accepted."
+remediation: "Verify JWT signatures using strong secrets or asymmetric keys and reject unverified tokens."
+cwe:
+  - CWE-347
+tests:
+  vulnerable:
+    - fixtures/v06_vulnerable.py
+  safe:
+    - fixtures/v06_safe.py

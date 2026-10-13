@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kairo-analysis"
+version = "0.1.0"
+description = "KAIRO tree-sitter static engine and route inventory builder"
+dependencies = [
+    "pydantic>=2.10.0",
+    "pyyaml>=6.0",
+    "tree-sitter>=0.23.0",
+    "tree-sitter-python>=0.23.0",
+    "tree-sitter-javascript>=0.23.0",
+    "tree-sitter-typescript>=0.23.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["kairo_analysis"]

@@ -1,0 +1,26 @@
+id: KR-V01-open-write-route
+class: V01
+title: State-changing route without authentication
+severity: high
+languages:
+  - javascript
+  - typescript
+frameworks:
+  - express
+  - nextjs
+analyzer: route_without_auth
+applies_to:
+  methods:
+    - POST
+    - PUT
+    - PATCH
+    - DELETE
+message: "{method} {path} changes data and no authentication check was found."
+remediation: "Attach authentication middleware or dependency. Ensure unauthenticated requests return 401 Unauthorized."
+cwe:
+  - CWE-306
+tests:
+  vulnerable:
+    - fixtures/v01_vulnerable.js
+  safe:
+    - fixtures/v01_safe.js

@@ -1,0 +1,187 @@
+@import "./tokens.css";
+
+/* Base reset & typography */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hard geometry links */
+a {
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  opacity: 0.85;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+h1 { font-size: 2rem; margin-bottom: 1rem; }
+h2 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+
+/* Buttons with 3px radius (BR-2) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-control);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.btn-primary:hover {
+  opacity: 0.92;
+}
+
+.btn-secondary {
+  background-color: var(--surface);
+  color: var(--text);
+  border-color: var(--line);
+}
+
+.btn-secondary:hover {
+  background-color: var(--sunken);
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  color: var(--on-accent);
+}
+
+/* Inputs & Form Controls */
+.input, .select, .textarea {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  background-color: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  padding: 0.5rem 0.75rem;
+  outline: none;
+}
+
+.input:focus, .select:focus, .textarea:focus {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 1px var(--focus);
+}
+
+/* Cards & Surfaces */
+.card {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 1.5rem;
+}
+
+/* Severity Badges (Words + Shapes + Color, BR-15) */
+.badge-severity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-label);
+  border: 1px solid transparent;
+}
+
+.badge-critical {
+  background-color: var(--sev-critical-bg);
+  color: var(--sev-critical);
+  border-color: var(--sev-critical);
+}
+
+.badge-high {
+  background-color: var(--sev-high-bg);
+  color: var(--sev-high);
+  border-color: var(--sev-high);
+}
+
+.badge-medium {
+  background-color: var(--sev-medium-bg);
+  color: var(--sev-medium);
+  border-color: var(--sev-medium);
+}
+
+.badge-low {
+  background-color: var(--sev-low-bg);
+  color: var(--sev-low);
+  border-color: var(--sev-low);
+}
+
+.badge-info {
+  background-color: var(--sev-info-bg);
+  color: var(--sev-info);
+  border-color: var(--sev-info);
+}
+
+.badge-fixed {
+  background-color: var(--status-fixed-bg);
+  color: var(--status-fixed);
+  border-color: var(--status-fixed);
+}
+
+/* Layout container */
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Brand Logo Switching (Dark / Light themes) */
+.brand-dark {
+  display: block;
+}
+.brand-light {
+  display: none;
+}
+
+:root[data-theme="light"] .brand-dark {
+  display: none !important;
+}
+:root[data-theme="light"] .brand-light {
+  display: block !important;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .brand-dark {
+    display: none !important;
+  }
+  :root:not([data-theme="dark"]) .brand-light {
+    display: block !important;
+  }
+}
+

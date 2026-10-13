@@ -1,0 +1,23 @@
+id: KR-V08-sql-injection
+class: V08
+title: SQL injection via string concatenation or interpolation
+severity: critical
+languages:
+  - python
+  - javascript
+  - typescript
+frameworks:
+  - express
+  - nextjs
+  - fastapi
+  - flask
+analyzer: sqli
+message: "Raw SQL query constructed via dynamic string formatting rather than parameterized statements."
+remediation: "Use parameterized queries or ORM abstractions to pass query variables separately from SQL syntax."
+cwe:
+  - CWE-89
+tests:
+  vulnerable:
+    - fixtures/v08_vulnerable.py
+  safe:
+    - fixtures/v08_safe.py

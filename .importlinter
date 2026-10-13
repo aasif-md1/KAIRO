@@ -1,0 +1,45 @@
+[importlinter]
+root_packages =
+    kairo_api
+    kairo_worker
+    kairo_runner
+    kairo_analysis
+    kairo_rules
+    kairo_findings
+    kairo_model_client
+    kairo_tester
+    kairo_reports
+
+# Contract 1: packages/analysis must be completely isolated from DB and network
+[importlinter:contract:analysis-isolation]
+name = Analysis package must not touch DB or worker
+type = forbidden
+source_modules =
+    kairo_analysis
+forbidden_modules =
+    kairo_api
+    kairo_worker
+    kairo_runner
+
+# Contract 2: runner must never import database models or api services
+[importlinter:contract:runner-no-db]
+name = Runner must never import database or API code
+type = forbidden
+source_modules =
+    kairo_runner
+    kairo_tester
+forbidden_modules =
+    kairo_api
+    kairo_worker
+
+# Contract 3: API layers (layered architecture)
+[importlinter:contract:api-layers]
+name = API Layered architecture: routers -> services -> repositories
+type = layers
+containers =
+    kairo_api
+layers =
+    routers
+    services
+    repositories
+    models

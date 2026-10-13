@@ -1,0 +1,70 @@
+[project]
+name = "kairo-workspace"
+version = "0.1.0"
+description = "KAIRO: Access-control and secret-handling audit platform"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.uv.workspace]
+members = [
+    "apps/api",
+    "apps/worker",
+    "apps/runner",
+    "packages/analysis",
+    "packages/rules",
+    "packages/model_client",
+    "packages/tester",
+    "packages/findings",
+    "packages/reports",
+]
+
+[tool.uv.sources]
+kairo-findings = { workspace = true }
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "B",
+    "C4",
+    "UP",
+    "ARG",
+    "SIM",
+    "S",
+]
+ignore = [
+    "S101",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = [
+    "kairo_api",
+    "kairo_worker",
+    "kairo_runner",
+    "kairo_analysis",
+    "kairo_rules",
+    "kairo_model_client",
+    "kairo_tester",
+    "kairo_findings",
+    "kairo_reports",
+]
+
+[tool.pyright]
+pythonVersion = "3.12"
+typeCheckingMode = "standard"
+include = [
+    "apps",
+    "packages",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "apps", "packages"]
+python_files = ["test_*.py", "*_test.py"]
+asyncio_mode = "auto"

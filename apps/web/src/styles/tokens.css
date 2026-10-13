@@ -1,0 +1,171 @@
+/* ==============================================================================
+   KAIRO Design Tokens (UI/UX Design Brief Section 16)
+   Strictly enforces:
+   - No violet/purple hue (hue 250-300 deg forbidden)
+   - Max 6px radius for cards/dialogs, 3px for controls
+   - Contrast-verified tokens for Light and Dark themes
+   ============================================================================== */
+
+:root,
+:root[data-theme="light"] {
+  /* Surfaces */
+  --bg: #F2F0EA;
+  --surface: #FAF9F5;
+  --raised: #FAF9F5;
+  --sunken: #E9E6DE;
+
+  /* Typography Colors */
+  --text: #0B0D12;
+  --text-2: #333844;
+  --muted: #575C69;
+
+  /* Borders and Dividers */
+  --line: #D9D5CA;
+  --line-strong: #7A7667;
+
+  /* Primary Accent (Deep Emerald) */
+  --accent: #0E6B57;
+  --on-accent: #F2F0EA;
+  --accent-text: #0A5545;
+  --accent-tint: #DDEDE7;
+
+  /* Interactive States */
+  --focus: #0E6B57;
+  --danger: #A12A20;
+
+  /* Brand Tile Accent */
+  --emerald-tile: #0B9079;
+
+  /* Semantic Severity Colors (Words + Shapes + Color) */
+  --sev-critical: #A12A20;
+  --sev-critical-bg: #F8E5E2;
+
+  --sev-high: #8F3F0B;
+  --sev-high-bg: #FBEBDD;
+
+  --sev-medium: #6E5300;
+  --sev-medium-bg: #F8F0D2;
+
+  --sev-low: #2D4C74;
+  --sev-low-bg: #E6ECF4;
+
+  --sev-info: #3A3F4B;
+  --sev-info-bg: #E9E6DE;
+
+  --status-fixed: #0A5545;
+  --status-fixed-bg: #DDEDE7;
+
+  /* Typography */
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Geometric Radius Scale (Hard-edged geometry, max 6px) */
+  --radius-label: 2px;
+  --radius-control: 3px;
+  --radius-card: 4px;
+  --radius-dialog: 6px;
+
+  /* Motion (Quiet, max 150ms) */
+  --dur-fast: 120ms;
+  --dur-dialog: 150ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+:root[data-theme="dark"] {
+  /* Surfaces */
+  --bg: #0B0D12;
+  --surface: #12151C;
+  --raised: #1A1E27;
+  --sunken: #080A0E;
+
+  /* Typography Colors */
+  --text: #F2F0EA;
+  --text-2: #CFCCC2;
+  --muted: #A3A39F;
+
+  /* Borders and Dividers */
+  --line: #262B36;
+  --line-strong: #6B7080;
+
+  /* Primary Accent */
+  --accent: #0E6B57;
+  --on-accent: #F2F0EA;
+  --accent-text: #4CC2A2;
+  --accent-tint: #0F2A23;
+
+  /* Interactive States */
+  --focus: #4CC2A2;
+  --danger: #A12A20;
+
+  /* Brand Tile Accent */
+  --emerald-tile: #0B9079;
+
+  /* Semantic Severity Colors */
+  --sev-critical: #FF9A8A;
+  --sev-critical-bg: #2C1613;
+
+  --sev-high: #FFB885;
+  --sev-high-bg: #2B1C10;
+
+  --sev-medium: #EFCB62;
+  --sev-medium-bg: #2A2310;
+
+  --sev-low: #9CC1EE;
+  --sev-low-bg: #131F2E;
+
+  --sev-info: #CFCCC2;
+  --sev-info-bg: #1A1E27;
+
+  --status-fixed: #4CC2A2;
+  --status-fixed-bg: #0F2A23;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B0D12;
+    --surface: #12151C;
+    --raised: #1A1E27;
+    --sunken: #080A0E;
+    --text: #F2F0EA;
+    --text-2: #CFCCC2;
+    --muted: #A3A39F;
+    --line: #262B36;
+    --line-strong: #6B7080;
+    --accent: #0E6B57;
+    --on-accent: #F2F0EA;
+    --accent-text: #4CC2A2;
+    --accent-tint: #0F2A23;
+    --focus: #4CC2A2;
+    --danger: #A12A20;
+    --emerald-tile: #0B9079;
+    --sev-critical: #FF9A8A;
+    --sev-critical-bg: #2C1613;
+    --sev-high: #FFB885;
+    --sev-high-bg: #2B1C10;
+    --sev-medium: #EFCB62;
+    --sev-medium-bg: #2A2310;
+    --sev-low: #9CC1EE;
+    --sev-low-bg: #131F2E;
+    --sev-info: #CFCCC2;
+    --sev-info-bg: #1A1E27;
+    --status-fixed: #4CC2A2;
+    --status-fixed-bg: #0F2A23;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}

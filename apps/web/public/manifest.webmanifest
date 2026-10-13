@@ -1,0 +1,16 @@
+{
+  "name": "KAIRO",
+  "short_name": "KAIRO",
+  "description": "Access-control and secret-handling audit platform for AI-built apps",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F2F0EA",
+  "theme_color": "#0B0D12",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "brand": {
+    "name": "KAIRO",
+    "tagline": "Access-control and secret-handling audit platform for AI-built apps",
+    "headline": "Find access-control flaws in AI-built apps before you launch."
+  },
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "account": "Account",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "security": "Security"
+  },
+  "footer": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms and Conditions",
+    "security": "Security",
+    "contact": "Contact",
+    "licenses": "Licenses",
+    "copyright": "KAIRO. Open source and privacy first."
+  },
+  "actions": {
+    "startScan": "Start scan",
+    "connectGithub": "Connect with GitHub",
+    "uploadZip": "Upload ZIP",
+    "recheck": "Re-check fix",
+    "dismiss": "Dismiss finding",
+    "reopen": "Reopen finding",
+    "exportPdf": "Export PDF",
+    "exportSarif": "Export SARIF",
+    "exportJson": "Export JSON",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "deleteProject": "Delete project",
+    "deleteAccount": "Delete account and data"
+  },
+  "severity": {
+    "critical": "Critical",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "informational": "Informational"
+  },
+  "confidence": {
+    "confirmed": "Confirmed",
+    "likely": "Likely",
+    "possible": "Possible"
+  },
+  "status": {
+    "open": "Open",
+    "fixed": "Fixed",
+    "dismissed": "Dismissed"
+  },
+  "attestation": {
+    "title": "Authorization Confirmation",
+    "body": "I confirm that I own this code or have explicit authorization from its owner to perform security testing.",
+    "checkbox": "I confirm I am authorized to audit this application.",
+    "confirm": "Authorize and Scan"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "notFound": "Page or resource not found.",
+    "unauthorized": "You must be signed in to perform this action.",
+    "forbidden": "You do not have permission to access this project.",
+    "rateLimited": "Rate limit reached. Please wait a moment before trying again.",
+    "archiveTooLarge": "The uploaded ZIP exceeds the 50 MB limit.",
+    "invalidArchive": "The archive could not be read or contains dangerous relative paths.",
+    "runnerUnavailable": "Dynamic test runner node is currently busy. Scan will resume automatically."
+  }
+}

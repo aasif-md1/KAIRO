@@ -1,0 +1,23 @@
+id: KR-V10-permissive-cors
+class: V10
+title: Permissive CORS with wildcard origin and credentials
+severity: high
+languages:
+  - python
+  - javascript
+  - typescript
+frameworks:
+  - express
+  - nextjs
+  - fastapi
+  - flask
+analyzer: cors
+message: "CORS configuration allows wildcard or reflective origin together with credentials."
+remediation: "Specify an explicit list of trusted origins when credentials are supported."
+cwe:
+  - CWE-942
+tests:
+  vulnerable:
+    - fixtures/v10_vulnerable.js
+  safe:
+    - fixtures/v10_safe.js

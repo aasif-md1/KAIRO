@@ -1,0 +1,24 @@
+id: KR-V13-debug-mode
+class: V13
+title: Debug mode or verbose error reporting enabled
+severity: medium
+languages:
+  - python
+  - javascript
+  - typescript
+frameworks:
+  - express
+  - nextjs
+  - fastapi
+  - flask
+analyzer: debug_mode
+message: "Application is configured with debug mode enabled or returns stack traces upon error."
+remediation: "Disable debug mode in production and sanitize error responses."
+cwe:
+  - CWE-200
+  - CWE-489
+tests:
+  vulnerable:
+    - fixtures/v13_vulnerable.py
+  safe:
+    - fixtures/v13_safe.py
