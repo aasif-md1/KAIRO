@@ -1,17 +1,14 @@
 """Project management, configuration, archive upload, and attestation router (FR-I1 through FR-I8)."""
 
-import datetime
 import hashlib
 import json
-import os
 from pathlib import Path
 import secrets
 from typing import Annotated, Optional
-from fastapi import APIRouter, Depends, File, HTTPException, Response, UploadFile, status
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from pydantic import BaseModel, Field
-from sqlalchemy import delete, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from kairo_api.database import get_db
 from kairo_api.dependencies.auth import get_current_user

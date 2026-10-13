@@ -17,7 +17,7 @@ class Report(Base):
     format: Mapped[str] = mapped_column(String(20), nullable=False)  # "json", "sarif", "pdf"
     storage_key: Mapped[str] = mapped_column(String(500), nullable=False)
     content_hash: Mapped[str] = mapped_column(String(64), nullable=False)
-    
+
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.datetime.now(datetime.timezone.utc)
     )
@@ -32,7 +32,7 @@ class ShareLink(Base):
     token_hash: Mapped[str] = mapped_column(String(64), unique=True, index=True, nullable=False)
     expires_at: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     is_revoked: Mapped[bool] = mapped_column(Boolean, default=False)
-    
+
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.datetime.now(datetime.timezone.utc)
     )

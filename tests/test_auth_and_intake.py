@@ -29,7 +29,7 @@ async def test_full_auth_and_intake_workflow():
         # 2. Simulate OAuth login / callback using mock token
         # Create a mock session directly
         from kairo_api.models.user import Session as DbSession
-        import datetime, secrets
+        import datetime
         from sqlalchemy.ext.asyncio import async_sessionmaker
 
         session_factory = async_sessionmaker(engine, expire_on_commit=False)

@@ -9,7 +9,6 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from kairo_api.database import get_db
 from kairo_api.dependencies.auth import get_current_user
@@ -36,7 +35,7 @@ async def start_scan(
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
     """Start a new audit scan on the project (US-06).
-    
+
     Enforces LR-1: user must have confirmed authorization attestation.
     """
     # Check attestation

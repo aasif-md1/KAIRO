@@ -5,20 +5,19 @@ import hashlib
 import json
 import secrets
 from typing import Annotated, Optional
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, Response
 from pydantic import BaseModel
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from kairo_api.config import settings
 from kairo_api.database import get_db
 from kairo_api.dependencies.auth import get_current_user
 from kairo_api.models.finding import FindingRecord
-from kairo_api.models.project import Attestation, Project, ProjectConfig
+from kairo_api.models.project import Project
 from kairo_api.models.report import AuditEvent
 from kairo_api.models.scan import Scan
-from kairo_api.models.user import Session as DbSession, User
+from kairo_api.models.user import User
 
 router = APIRouter(tags=["User Account"])
 

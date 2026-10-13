@@ -1,19 +1,16 @@
 """Finding details, status modification, recheck, and scan comparison router (US-07, US-08, US-09, FR-F4, FR-F5, FR-F6)."""
 
-import datetime
 import secrets
 from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from kairo_api.database import get_db
 from kairo_api.dependencies.auth import get_current_user
-from kairo_api.dependencies.ownership import require_finding_owner, require_scan_owner
+from kairo_api.dependencies.ownership import require_finding_owner
 from kairo_api.models.finding import EvidenceRecord, FindingRecord, StatusEvent
-from kairo_api.models.project import Project
 from kairo_api.models.report import AuditEvent
 from kairo_api.models.scan import Scan
 from kairo_api.models.user import User
@@ -142,7 +139,7 @@ async def recheck_finding(
 ):
     """Trigger a fast targeted re-check on a single finding (US-08, FR-F5)."""
     recheck_id = f"rck_{secrets.token_hex(12)}"
-    
+
     audit = AuditEvent(
         id=f"aud_{secrets.token_hex(12)}",
         user_id=current_user.id,

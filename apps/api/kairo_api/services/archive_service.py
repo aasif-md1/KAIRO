@@ -6,7 +6,6 @@ Protects against:
 - Symlink exploits (rejection of symlinks and special devices)
 """
 
-import os
 import zipfile
 from pathlib import Path
 from fastapi import HTTPException, status
@@ -29,7 +28,7 @@ IGNORED_DIRECTORIES = {
 
 def validate_and_extract_zip(zip_path: Path, target_dir: Path) -> list[str]:
     """Validate archive for safety and extract into target_dir.
-    
+
     Returns a list of extracted relative file paths.
     """
     target_dir.mkdir(parents=True, exist_ok=True)

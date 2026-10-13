@@ -1,9 +1,13 @@
 """Project, ProjectConfig, and Attestation SQLAlchemy models."""
 
 import datetime
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from kairo_api.models.scan import Scan
+    from kairo_api.models.user import User
 
 from kairo_api.database import Base
 
@@ -39,7 +43,7 @@ class ProjectConfig(Base):
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     project_id: Mapped[str] = mapped_column(String(36), ForeignKey("projects.id", ondelete="CASCADE"), unique=True, nullable=False)
-    
+
     start_command: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     test_port: Mapped[int] = mapped_column(Integer, default=3000)
     env_vars_encrypted: Mapped[Optional[str]] = mapped_column(Text, nullable=True)

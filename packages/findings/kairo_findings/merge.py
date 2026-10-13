@@ -7,7 +7,7 @@ from kairo_findings.rubric import compute_severity
 
 def merge_layer_findings(findings: Iterable[FindingBase]) -> list[FindingBase]:
     """Merge findings by fingerprint across static, logic review, and dynamic testing layers.
-    
+
     Rules:
     1. Dynamic testing corroboration upgrades confidence to CONFIRMED.
     2. Logic review findings without dynamic corroboration are capped at LIKELY.

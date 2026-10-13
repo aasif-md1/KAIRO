@@ -4,7 +4,7 @@ import hashlib
 import math
 import re
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 from kairo_findings.models import (
     Confidence,
     FindingBase,

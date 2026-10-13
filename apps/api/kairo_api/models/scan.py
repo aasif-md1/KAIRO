@@ -1,9 +1,13 @@
 """Scan, Stage, and RouteInventory SQLAlchemy models."""
 
 import datetime
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from kairo_api.models.finding import FindingRecord
+    from kairo_api.models.project import Project
 
 from kairo_api.database import Base
 
@@ -14,7 +18,7 @@ class Scan(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     project_id: Mapped[str] = mapped_column(String(36), ForeignKey("projects.id", ondelete="CASCADE"), index=True, nullable=False)
     user_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False)
-    
+
     status: Mapped[str] = mapped_column(String(20), default="queued", index=True)  # queued, running, completed, failed, cancelled
     commit_hash: Mapped[Optional[str]] = mapped_column(String(40), nullable=True)
     layers_requested_json: Mapped[str] = mapped_column(Text, default='["static", "dynamic"]')
@@ -41,7 +45,7 @@ class Stage(Base):
     name: Mapped[str] = mapped_column(String(50), nullable=False)  # prepare, static, logic, dynamic, merge, report
     status: Mapped[str] = mapped_column(String(20), default="pending")  # pending, running, completed, failed, skipped
     error_message: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    
+
     started_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     completed_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
@@ -53,7 +57,7 @@ class RouteInventory(Base):
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     scan_id: Mapped[str] = mapped_column(String(36), ForeignKey("scans.id", ondelete="CASCADE"), index=True, nullable=False)
-    
+
     method: Mapped[str] = mapped_column(String(10), nullable=False)
     path: Mapped[str] = mapped_column(String(255), nullable=False)
     handler_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)

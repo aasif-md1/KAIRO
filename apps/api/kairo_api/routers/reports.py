@@ -2,10 +2,9 @@
 
 import datetime
 import hashlib
-import json
 import secrets
-from typing import Annotated, Optional
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from typing import Annotated
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -176,7 +175,7 @@ async def view_shared_report(token: str, db: Annotated[AsyncSession, Depends(get
 
     stmt = select(ShareLink).where(
         ShareLink.token_hash == token_hash,
-        ShareLink.is_revoked == False,
+        not ShareLink.is_revoked,
         ShareLink.expires_at > now,
     )
     res = await db.execute(stmt)

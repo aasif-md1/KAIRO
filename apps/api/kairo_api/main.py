@@ -6,7 +6,6 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from kairo_api.config import settings
 from kairo_api.database import Base, engine
 from kairo_api.routers import (
     auth_router,

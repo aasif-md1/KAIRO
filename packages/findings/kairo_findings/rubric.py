@@ -27,7 +27,7 @@ def compute_severity(
     is_admin_route: bool = False,
 ) -> Severity:
     """Apply the deterministic severity rubric.
-    
+
     Findings with verified write-impact or affecting admin routes
     are promoted to CRITICAL.
     """

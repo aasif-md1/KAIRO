@@ -16,7 +16,7 @@ from kairo_api.dependencies.ownership import (
 )
 from kairo_api.main import app
 from kairo_api.models.finding import FindingRecord
-from kairo_api.models.project import Attestation, Project, ProjectConfig
+from kairo_api.models.project import Attestation, Project
 from kairo_api.models.scan import Scan
 from kairo_api.models.user import Session as DbSession, User
 from sqlalchemy.ext.asyncio import async_sessionmaker

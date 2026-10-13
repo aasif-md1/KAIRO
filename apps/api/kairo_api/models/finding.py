@@ -1,9 +1,12 @@
 """Finding, Evidence, and StatusEvent SQLAlchemy models."""
 
 import datetime
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from kairo_api.models.scan import Scan
 
 from kairo_api.database import Base
 
@@ -14,13 +17,13 @@ class FindingRecord(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     project_id: Mapped[str] = mapped_column(String(36), ForeignKey("projects.id", ondelete="CASCADE"), index=True, nullable=False)
     scan_id: Mapped[str] = mapped_column(String(36), ForeignKey("scans.id", ondelete="CASCADE"), index=True, nullable=False)
-    
+
     fingerprint: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
     vulnerability_class: Mapped[str] = mapped_column(String(10), nullable=False)  # V01-V13
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     severity: Mapped[str] = mapped_column(String(20), nullable=False)  # Critical, High, Medium, Low, Informational
     confidence: Mapped[str] = mapped_column(String(20), nullable=False)  # Confirmed, Likely, Possible
-    
+
     status: Mapped[str] = mapped_column(String(20), default="open", index=True)  # open, fixed, dismissed
     dismissal_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
@@ -59,7 +62,7 @@ class EvidenceRecord(Base):
     finding_id: Mapped[str] = mapped_column(String(36), ForeignKey("findings.id", ondelete="CASCADE"), index=True, nullable=False)
     layer: Mapped[str] = mapped_column(String(20), nullable=False)  # static, logic, dynamic
     description: Mapped[str] = mapped_column(Text, nullable=False)
-    
+
     # Redacted HTTP details
     request_method: Mapped[Optional[str]] = mapped_column(String(10), nullable=True)
     request_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)

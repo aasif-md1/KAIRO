@@ -1,9 +1,12 @@
 """User, Session, and Installation SQLAlchemy models."""
 
 import datetime
-from typing import Optional
-from sqlalchemy import BigInteger, Boolean, DateTime, ForeignKey, Integer, String, Text
+from typing import TYPE_CHECKING, Optional
+from sqlalchemy import BigInteger, DateTime, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from kairo_api.models.project import Project
 
 from kairo_api.database import Base
 

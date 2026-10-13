@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional
 import tree_sitter
 import tree_sitter_python
 import tree_sitter_javascript

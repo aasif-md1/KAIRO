@@ -18,7 +18,7 @@ def compute_finding_fingerprint(
     symbol_name: Optional[str] = None,
 ) -> str:
     """Compute a deterministic, stable fingerprint hash for a finding.
-    
+
     Line numbers are intentionally excluded so edits that shift lines
     do not create duplicate findings.
     """

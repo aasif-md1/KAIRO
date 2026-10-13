@@ -2,7 +2,7 @@
 
 import re
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 import tree_sitter
 from kairo_analysis.extractors.base import BaseRouteExtractor
 from kairo_analysis.models import (
@@ -88,7 +88,7 @@ class FlaskRouteExtractor(BaseRouteExtractor):
         func_name_node = func_node.child_by_field_name("name")
         func_name = st.node_text(func_name_node) if func_name_node else "handler"
         handler_text = st.node_text(func_node)
-        all_text = st.node_text(node)
+        st.node_text(node)
 
         # Check for decorators like @login_required
         dec_names = [st.node_text(d) for d in decorators]

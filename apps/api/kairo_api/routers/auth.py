@@ -1,12 +1,10 @@
 """Authentication and account lifecycle router (FR-A1 through FR-A6, US-01, US-11)."""
 
 import datetime
-import hashlib
-import json
 import secrets
 from typing import Annotated, Optional
 import httpx
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from sqlalchemy import delete, select
@@ -17,7 +15,6 @@ from kairo_api.database import get_db
 from kairo_api.dependencies.auth import get_current_user
 from kairo_api.models.report import AuditEvent
 from kairo_api.models.user import Session as DbSession, User
-from kairo_api.models.project import Project
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 

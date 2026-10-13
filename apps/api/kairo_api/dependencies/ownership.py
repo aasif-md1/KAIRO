@@ -25,7 +25,7 @@ async def require_project_owner(
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> Project:
     """Load project and verify ownership by current user.
-    
+
     Returns 404 if project does not exist OR belongs to another user.
     """
     stmt = select(Project).where(
@@ -48,7 +48,7 @@ async def require_scan_owner(
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> Scan:
     """Load scan and verify ownership by current user.
-    
+
     Returns 404 if scan does not exist OR belongs to another user.
     """
     stmt = select(Scan).where(
@@ -71,7 +71,7 @@ async def require_finding_owner(
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> FindingRecord:
     """Load finding and verify ownership by current user through project relation.
-    
+
     Returns 404 if finding does not exist OR belongs to another user.
     """
     stmt = (
