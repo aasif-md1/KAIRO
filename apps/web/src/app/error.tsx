@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
+import { Container } from "@/components/Container";
 
 export default function ErrorBoundary({
   error,
@@ -10,17 +12,51 @@ export default function ErrorBoundary({
   reset: () => void;
 }) {
   return (
-    <div className="container" style={{ padding: "6rem 1.5rem", textAlign: "center", maxWidth: "500px" }}>
-      <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--sev-critical)", textTransform: "uppercase", marginBottom: "0.5rem" }}>
-        Error
-      </div>
-      <h1 style={{ fontSize: "2rem", marginBottom: "1rem" }}>An Error Occurred</h1>
-      <p style={{ color: "var(--muted)", fontSize: "0.875rem", marginBottom: "2rem", lineHeight: 1.6 }}>
-        {error.message || "An unexpected system error occurred while processing this request."}
-      </p>
-      <button onClick={() => reset()} className="btn btn-primary">
-        Try Again
-      </button>
+    <div
+      style={{
+        minHeight: "calc(100vh - 72px - 160px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "48px 0",
+      }}
+    >
+      <Container>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <div
+            className="card"
+            style={{
+              maxWidth: "520px",
+              width: "100%",
+              padding: "40px 36px",
+              textAlign: "center",
+            }}
+          >
+            <div className="eyebrow" style={{ color: "var(--sev-high)", marginBottom: "12px" }}>
+              Error 500 (E-02)
+            </div>
+            <h1 className="section-h2" style={{ margin: "0 0 16px" }}>
+              Application error
+            </h1>
+            <p className="body-p" style={{ margin: "0 0 32px" }}>
+              An unexpected error occurred while processing your request. Our team has been notified.
+            </p>
+            <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+              <button
+                type="button"
+                onClick={() => reset()}
+                className="btn btn-primary"
+                id="error-btn-retry"
+              >
+                Try again
+              </button>
+              <Link href="/" className="btn btn-secondary" id="error-btn-home">
+                Return to home
+              </Link>
+            </div>
+          </div>
+        </div>
+      </Container>
     </div>
   );
 }

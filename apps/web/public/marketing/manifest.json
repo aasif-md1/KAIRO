@@ -1,0 +1,121 @@
+{
+  "report": {
+    "route": "/internal-assets/report",
+    "width": 1040,
+    "height": 680,
+    "variants": {
+      "dark_2x": {
+        "png": "/marketing/report-dark@2x.png",
+        "width": 2080,
+        "height": 1360
+      },
+      "light_2x": {
+        "png": "/marketing/report-light@2x.png",
+        "width": 2080,
+        "height": 1360
+      }
+    }
+  },
+  "finding-detail": {
+    "route": "/internal-assets/finding-detail",
+    "width": 1040,
+    "height": 720,
+    "variants": {
+      "dark_2x": {
+        "png": "/marketing/finding-detail-dark@2x.png",
+        "width": 2080,
+        "height": 1440
+      },
+      "light_2x": {
+        "png": "/marketing/finding-detail-light@2x.png",
+        "width": 2080,
+        "height": 1440
+      }
+    }
+  },
+  "scan-progress": {
+    "route": "/internal-assets/scan-progress",
+    "width": 1040,
+    "height": 600,
+    "variants": {
+      "dark_2x": {
+        "png": "/marketing/scan-progress-dark@2x.png",
+        "width": 2080,
+        "height": 1200
+      },
+      "light_2x": {
+        "png": "/marketing/scan-progress-light@2x.png",
+        "width": 2080,
+        "height": 1200
+      }
+    }
+  },
+  "repo-picker": {
+    "route": "/internal-assets/repo-picker",
+    "width": 800,
+    "height": 520,
+    "variants": {
+      "dark_2x": {
+        "png": "/marketing/repo-picker-dark@2x.png",
+        "width": 1600,
+        "height": 1040
+      },
+      "light_2x": {
+        "png": "/marketing/repo-picker-light@2x.png",
+        "width": 1600,
+        "height": 1040
+      }
+    }
+  },
+  "project-settings": {
+    "route": "/internal-assets/project-settings",
+    "width": 800,
+    "height": 620,
+    "variants": {
+      "dark_2x": {
+        "png": "/marketing/project-settings-dark@2x.png",
+        "width": 1600,
+        "height": 1240
+      },
+      "light_2x": {
+        "png": "/marketing/project-settings-light@2x.png",
+        "width": 1600,
+        "height": 1240
+      }
+    }
+  },
+  "route-inventory": {
+    "route": "/internal-assets/route-inventory",
+    "width": 1040,
+    "height": 500,
+    "variants": {
+      "dark_2x": {
+        "png": "/marketing/route-inventory-dark@2x.png",
+        "width": 2080,
+        "height": 1000
+      },
+      "light_2x": {
+        "png": "/marketing/route-inventory-light@2x.png",
+        "width": 2080,
+        "height": 1000
+      }
+    }
+  },
+  "pdf-preview": {
+    "route": "/internal-assets/pdf-preview",
+    "width": 700,
+    "height": 950,
+    "variants": {
+      "dark_2x": {
+        "png": "/marketing/pdf-preview-dark@2x.png",
+        "width": 1400,
+        "height": 1900
+      },
+      "light_2x": {
+        "png": "/marketing/pdf-preview-light@2x.png",
+        "width": 1400,
+        "height": 1900
+      }
+    }
+  }
+}

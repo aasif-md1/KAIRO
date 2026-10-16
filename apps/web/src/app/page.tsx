@@ -1,642 +1,793 @@
 import React from "react";
 import Link from "next/link";
+import { Container } from "@/components/Container";
+import { BrandGeometry } from "@/components/BrandGeometry";
+import { ProblemExplainer } from "@/components/ProblemExplainer";
+import { TabbedCoverage } from "@/components/TabbedCoverage";
+import { FAQAccordion } from "@/components/FAQAccordion";
+import { CTASection } from "@/components/CTASection";
+import { HeroStage } from "@/components/stages/HeroStage";
+import { WalkthroughStage } from "@/components/stages/WalkthroughStage";
+import { LayerDiagram } from "@/components/stages/LayerDiagram";
+import { TrustDiagram } from "@/components/stages/TrustDiagram";
+import { ExportsStage } from "@/components/stages/ExportsStage";
+import { WindowFrame } from "@/components/WindowFrame";
 
 export const metadata = {
-  title: "KAIRO - Access-Control and Secret-Handling Audit Platform",
+  title: "KAIRO: Access-Control and Secret Audit Platform",
   description:
     "Automated access-control, IDOR, and secret audit platform for Express, Next.js, FastAPI, and Flask web applications.",
 };
 
-const VULN_CLASSES = [
-  {
-    code: "V01",
-    title: "Missing Authentication on State-Changing Routes",
-    severity: "High",
-    layer: "Static",
-    desc: "Unauthenticated callers can trigger POST, PUT, or DELETE endpoints that mutate application data.",
-  },
-  {
-    code: "V02",
-    title: "Cross-Account Object Access (IDOR)",
-    severity: "Critical",
-    layer: "Dynamic",
-    desc: "Endpoints accept record identifiers without verifying that the requesting user owns the object.",
-  },
-  {
-    code: "V03",
-    title: "Privilege Escalation via Role Tampering",
-    severity: "High",
-    layer: "Dynamic",
-    desc: "Attackers can supply modified role parameters in request payloads to grant administrative rights.",
-  },
-  {
-    code: "V04",
-    title: "Client-Side-Only Access Control",
-    severity: "High",
-    layer: "Logic",
-    desc: "Security checks implemented in frontend components without corresponding server-side enforcement.",
-  },
-  {
-    code: "V05",
-    title: "Hardcoded Secrets & Committed Keys",
-    severity: "High",
-    layer: "Static",
-    desc: "High-entropy API tokens, private keys, database URLs, and committed .env files exposed in code.",
-  },
-  {
-    code: "V06",
-    title: "Insecure JWT & Session Handling",
-    severity: "High",
-    layer: "Static",
-    desc: "Unverified token signatures (verify=False), acceptance of the 'none' algorithm, and weak secrets.",
-  },
-  {
-    code: "V07",
-    title: "Weak Credential Storage & Insecure Cookies",
-    severity: "High",
-    layer: "Static",
-    desc: "Deprecated MD5/SHA-1 password hashing and sensitive session cookies missing HttpOnly and Secure flags.",
-  },
-  {
-    code: "V08",
-    title: "SQL Injection via String Concatenation",
-    severity: "Critical",
-    layer: "Static",
-    desc: "Raw database queries constructed via dynamic string formatting rather than parameterized statements.",
-  },
-  {
-    code: "V09",
-    title: "Missing Rate Limiting on Sensitive Endpoints",
-    severity: "Medium",
-    layer: "Dynamic",
-    desc: "Login, password reset, and authentication endpoints vulnerable to automated brute-force attacks.",
-  },
-  {
-    code: "V10",
-    title: "Permissive Cross-Origin Resource Sharing (CORS)",
-    severity: "High",
-    layer: "Static",
-    desc: "Overly permissive wildcard or reflective CORS origins combined with credentials enabled.",
-  },
-  {
-    code: "V11",
-    title: "Missing Row-Level Security & Tenant Isolation",
-    severity: "Critical",
-    layer: "Logic",
-    desc: "Database queries in multi-tenant systems executed without tenant identifier scoping.",
-  },
-  {
-    code: "V12",
-    title: "Mass Assignment Vulnerabilities",
-    severity: "High",
-    layer: "Dynamic",
-    desc: "Handlers bind untrusted HTTP request body dictionaries directly to database ORM models.",
-  },
-  {
-    code: "V13",
-    title: "Debug Mode & Stack Trace Leakage",
-    severity: "Medium",
-    layer: "Static",
-    desc: "Frameworks initialized with debug=True or error handlers exposing verbose stack traces in production.",
-  },
-];
-
-const FAQS = [
-  {
-    q: "How does KAIRO differ from traditional SAST tools?",
-    a: "Traditional SAST tools focus on generic syntax patterns and dependency CVEs. KAIRO is purpose-built to discover broken access control (OWASP Top 10 #1). It maps the complete route inventory of your application, verifies whether credential checks exist, checks object ownership, and confirms authorization live in an isolated sandbox.",
-  },
-  {
-    q: "Is my source code stored or used to train AI models?",
-    a: "Never. Your source code is retrieved into memory or temporary encrypted staging solely to execute your requested audit. Code snapshots are encrypted with AES-256-GCM under project-specific keys and permanently erased within 24 hours. Your code is never used to train or fine-tune public models.",
-  },
-  {
-    q: "How does the dynamic sandbox test without affecting production?",
-    a: "Dynamic tests run inside an isolated gVisor container on dedicated runner nodes with zero outbound internet access. The application runs with isolated sidecar databases (PostgreSQL, MySQL, Redis, MongoDB) populated with synthetic mock data.",
-  },
-  {
-    q: "Which frameworks and programming languages are supported in Release 1?",
-    a: "KAIRO supports Express, Next.js (App Router & Pages Router), FastAPI, and Flask across Python, JavaScript, TypeScript, and TSX. File discovery supports repositories and ZIP archives up to 200 MB and 20,000 files.",
-  },
-  {
-    q: "What report formats does KAIRO produce?",
-    a: "KAIRO provides an interactive web dashboard, standard SARIF 2.1.0 exports for CI/CD ingestion, and publication-ready tagged PDF executive reports.",
-  },
-];
-
 export default function HomePage() {
   return (
-    <div className="container" style={{ padding: "3rem 1.5rem" }}>
-      {/* Hero Section */}
-      <section
-        style={{
-          maxWidth: "880px",
-          margin: "0 auto",
-          textAlign: "center",
-          padding: "3rem 0 4rem 0",
-        }}
-      >
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            fontSize: "0.75rem",
-            fontWeight: 600,
-            textTransform: "uppercase",
-            letterSpacing: "0.06em",
-            color: "var(--accent-text)",
-            backgroundColor: "var(--accent-tint)",
-            padding: "0.25rem 0.75rem",
-            borderRadius: "var(--radius-control)",
-            marginBottom: "1.5rem",
-          }}
-        >
-          <span>Defense-In-Depth Security Audit Platform</span>
-          <span>·</span>
-          <span>Release 1.0</span>
-        </div>
+    <div style={{ position: "relative", overflowX: "clip" }}>
+      {/* 1) HERO SECTION */}
+      <section className="hero-section" style={{ borderBottom: "1px solid var(--line)" }}>
+        <BrandGeometry />
 
-        <h1
-          style={{
-            fontSize: "3rem",
-            lineHeight: 1.15,
-            marginBottom: "1.5rem",
-            letterSpacing: "-0.03em",
-            fontWeight: 700,
-          }}
-        >
-          Find access-control flaws in modern web applications before you ship.
-        </h1>
+        <Container style={{ position: "relative", zIndex: 1 }}>
+          <div className="grid-12" style={{ alignItems: "center" }}>
+            {/* Left 5 Columns */}
+            <div className="col-5">
+              <span className="eyebrow">Release 1 in development</span>
 
-        <p
-          style={{
-            fontSize: "1.1875rem",
-            color: "var(--muted)",
-            lineHeight: 1.6,
-            marginBottom: "2.5rem",
-            maxWidth: "760px",
-            marginRight: "auto",
-            marginLeft: "auto",
-          }}
-        >
-          KAIRO combines in-house Tree-sitter static parsing, gated logic review, and isolated sandbox
-          execution into one verified finding report. Catch missing authentication, IDOR, token misuse,
-          and hardcoded credentials across Express, Next.js, FastAPI, and Flask.
-        </p>
+              <h1 className="hero-h1">
+                Find access-control flaws in AI-built apps before you launch.
+              </h1>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "1rem",
-            flexWrap: "wrap",
-            marginBottom: "3rem",
-          }}
-        >
-          <Link
-            href="/sign-in"
-            className="btn btn-primary"
-            style={{ fontSize: "1rem", padding: "0.75rem 1.75rem" }}
-          >
-            Start Free Audit &rarr;
-          </Link>
-          <Link
-            href="/security"
-            className="btn btn-secondary"
-            style={{ fontSize: "1rem", padding: "0.75rem 1.75rem" }}
-          >
-            Read Security Architecture
-          </Link>
-        </div>
+              <p className="lead-p">
+                KAIRO reads your code, reviews the logic that decides who can see what, and tests a running copy in an isolated sandbox. Every finding comes with evidence, a fix and a re-check.
+              </p>
 
-        {/* Supported stacks callout */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "1.5rem",
-            flexWrap: "wrap",
-            color: "var(--muted)",
-            fontSize: "0.8125rem",
-            borderTop: "1px solid var(--line)",
-            borderBottom: "1px solid var(--line)",
-            padding: "1rem 0",
-          }}
-        >
-          <span style={{ fontWeight: 600, color: "var(--text)" }}>Supported Frameworks:</span>
-          <span>Express (Node.js)</span>
-          <span>·</span>
-          <span>Next.js (App &amp; Pages)</span>
-          <span>·</span>
-          <span>FastAPI (Python)</span>
-          <span>·</span>
-          <span>Flask (Python)</span>
-          <span>·</span>
-          <span>ZIP &amp; GitHub Ingestion</span>
-        </div>
-      </section>
-
-      {/* The Problem Section: Why Access Control? */}
-      <section style={{ maxWidth: "1000px", margin: "0 auto 5rem auto" }}>
-        <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-          <h2 style={{ fontSize: "2rem", marginBottom: "0.75rem", letterSpacing: "-0.02em" }}>
-            The Access-Control Blind Spot in AI-Assisted Code
-          </h2>
-          <p style={{ color: "var(--muted)", maxWidth: "680px", margin: "0 auto", fontSize: "1rem" }}>
-            Code generators create functioning business logic, but consistently miss authorization checks,
-            tenant scoping, and cryptographic verification.
-          </p>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem" }}>
-          <div className="card">
-            <h3 style={{ fontSize: "1.125rem", color: "var(--sev-critical)", marginBottom: "0.5rem" }}>
-              Traditional Linters Stop at Syntax
-            </h3>
-            <p style={{ color: "var(--muted)", fontSize: "0.875rem", lineHeight: 1.6, margin: 0 }}>
-              Standard linters and static tools verify formatting and known package dependencies, but
-              cannot understand whether User A can read User B&apos;s records or trigger administrative actions.
-            </p>
-          </div>
-
-          <div className="card">
-            <h3 style={{ fontSize: "1.125rem", color: "var(--sev-high)", marginBottom: "0.5rem" }}>
-              Hallucinated Auth Middleware
-            </h3>
-            <p style={{ color: "var(--muted)", fontSize: "0.875rem", lineHeight: 1.6, margin: 0 }}>
-              AI assistants frequently assign names like &quot;auth&quot; or &quot;protect&quot; to functions that do not actually
-              fail closed, giving developers a false sense of security while leaving routes wide open.
-            </p>
-          </div>
-
-          <div className="card">
-            <h3 style={{ fontSize: "1.125rem", color: "var(--accent)", marginBottom: "0.5rem" }}>
-              KAIRO Proves Flaws with Proof
-            </h3>
-            <p style={{ color: "var(--muted)", fontSize: "0.875rem", lineHeight: 1.6, margin: 0 }}>
-              KAIRO models your complete route inventory, inspects authentication and role signals, and
-              corroborates findings dynamically in an isolated sandbox with dual test personas.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Three Analysis Layers */}
-      <section style={{ maxWidth: "1000px", margin: "0 auto 5rem auto" }}>
-        <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-          <div
-            style={{
-              fontSize: "0.75rem",
-              fontWeight: 600,
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-              color: "var(--accent-text)",
-              marginBottom: "0.5rem",
-            }}
-          >
-            Multi-Layer Defense
-          </div>
-          <h2 style={{ fontSize: "2rem", marginBottom: "0.75rem", letterSpacing: "-0.02em" }}>
-            Three Independent Engines. Zero Conflicting Results.
-          </h2>
-          <p style={{ color: "var(--muted)", maxWidth: "680px", margin: "0 auto", fontSize: "1rem" }}>
-            Every scan runs through three distinct evaluation layers to eliminate blind spots and false positives.
-          </p>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem" }}>
-          {/* Layer 1: Static Engine */}
-          <div className="card" style={{ borderTop: "4px solid var(--accent)" }}>
-            <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--accent)", marginBottom: "0.5rem" }}>
-              LAYER 01
-            </div>
-            <h3 style={{ fontSize: "1.25rem", marginBottom: "0.75rem" }}>Tree-Sitter Static Engine</h3>
-            <p style={{ color: "var(--muted)", fontSize: "0.875rem", lineHeight: 1.6, marginBottom: "1rem" }}>
-              In-house concrete syntax tree parsers extract every route, middleware chain, and dependency parameter.
-              Builds a normalized route inventory with three-valued signals: detected, absent, or unknown.
-            </p>
-            <ul style={{ color: "var(--text-2)", fontSize: "0.8125rem", paddingLeft: "1.25rem", lineHeight: 1.6 }}>
-              <li>Deterministic YAML rules validated by JSON Schema</li>
-              <li>Shannon entropy secret scanning &amp; mask redaction</li>
-              <li>Stable fingerprints that survive line shifts</li>
-            </ul>
-          </div>
-
-          {/* Layer 2: Logic Review */}
-          <div className="card" style={{ borderTop: "4px solid var(--emerald-tile)" }}>
-            <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--emerald-tile)", marginBottom: "0.5rem" }}>
-              LAYER 02
-            </div>
-            <h3 style={{ fontSize: "1.25rem", marginBottom: "0.75rem" }}>Gated Logic Review</h3>
-            <p style={{ color: "var(--muted)", fontSize: "0.875rem", lineHeight: 1.6, marginBottom: "1rem" }}>
-              Inspects ambiguous handler logic up to two call levels deep. Strict PII and credential redaction
-              strips sensitive secrets before sending line-numbered context through a temperature-0 provider interface.
-            </p>
-            <ul style={{ color: "var(--text-2)", fontSize: "0.8125rem", paddingLeft: "1.25rem", lineHeight: 1.6 }}>
-              <li>Mandatory line citations required for all findings</li>
-              <li>Schema validation discards ungrounded responses</li>
-              <li>Confidence capped at Possible without dynamic proof</li>
-            </ul>
-          </div>
-
-          {/* Layer 3: Dynamic Sandbox */}
-          <div className="card" style={{ borderTop: "4px solid var(--status-fixed)" }}>
-            <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--status-fixed)", marginBottom: "0.5rem" }}>
-              LAYER 03
-            </div>
-            <h3 style={{ fontSize: "1.25rem", marginBottom: "0.75rem" }}>Isolated Dynamic Sandbox</h3>
-            <p style={{ color: "var(--muted)", fontSize: "0.875rem", lineHeight: 1.6, marginBottom: "1rem" }}>
-              Builds and runs your application inside a hardened gVisor micro-container with isolated network
-              bridges and zero outbound internet gateway. Automated drivers exercise endpoints using dual test accounts.
-            </p>
-            <ul style={{ color: "var(--text-2)", fontSize: "0.8125rem", paddingLeft: "1.25rem", lineHeight: 1.6 }}>
-              <li>Deterministic proof of cross-tenant IDOR access</li>
-              <li>Pre-seeded sidecars: Postgres, MySQL, Redis, Mongo</li>
-              <li>Runner nodes hold zero platform credentials</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* 13 Vulnerability Classes Showcase */}
-      <section style={{ maxWidth: "1000px", margin: "0 auto 5rem auto" }}>
-        <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-          <div
-            style={{
-              fontSize: "0.75rem",
-              fontWeight: 600,
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-              color: "var(--accent-text)",
-              marginBottom: "0.5rem",
-            }}
-          >
-            Audit Scope
-          </div>
-          <h2 style={{ fontSize: "2rem", marginBottom: "0.75rem", letterSpacing: "-0.02em" }}>
-            13 Release 1 Vulnerability Classes
-          </h2>
-          <p style={{ color: "var(--muted)", maxWidth: "680px", margin: "0 auto", fontSize: "1rem" }}>
-            Targeted specifically at access control, authentication bypass, and credential misuse.
-          </p>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: "1rem" }}>
-          {VULN_CLASSES.map((vc) => (
-            <div key={vc.code} className="card" style={{ padding: "1.25rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-                <span
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: "14px",
+                  marginBottom: "24px",
+                }}
+              >
+                <Link
+                  href="/sign-in"
+                  className="btn btn-primary"
                   style={{
-                    fontFamily: "var(--font-mono)",
-                    fontWeight: 700,
-                    fontSize: "0.8125rem",
-                    padding: "0.15rem 0.45rem",
-                    backgroundColor: "var(--sunken)",
-                    borderRadius: "var(--radius-control)",
-                  }}
-                >
-                  {vc.code}
-                </span>
-                <span
-                  style={{
-                    fontSize: "0.75rem",
+                    height: "46px",
+                    padding: "0 22px",
+                    fontSize: "15px",
                     fontWeight: 600,
-                    color:
-                      vc.severity === "Critical"
-                        ? "var(--sev-critical)"
-                        : vc.severity === "High"
-                        ? "var(--sev-high)"
-                        : "var(--sev-medium)",
                   }}
+                  id="hero-cta-github"
                 >
-                  {vc.severity}
-                </span>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+                    <path d="M9 18c-4.51 2-5-2-7-2" />
+                  </svg>
+                  <span>Continue with GitHub</span>
+                </Link>
+
+                <a
+                  href="#how-it-works"
+                  className="btn btn-secondary"
+                  style={{
+                    height: "46px",
+                    padding: "0 20px",
+                    fontSize: "15px",
+                  }}
+                  id="hero-cta-how-it-works"
+                >
+                  See how it works
+                </a>
               </div>
-              <h3 style={{ fontSize: "0.9375rem", marginBottom: "0.35rem", fontWeight: 600 }}>{vc.title}</h3>
-              <p style={{ color: "var(--muted)", fontSize: "0.8125rem", lineHeight: 1.5, margin: 0 }}>
-                {vc.desc}
+
+              <div className="caption-p" style={{ fontFamily: "var(--font-mono)" }}>
+                Read-only access. Source code deleted when the scan ends and never kept longer than 24 hours. No tracking cookies.
+              </div>
+            </div>
+
+            {/* Right 7 Columns (Bleeding) */}
+            <div className="col-7">
+              <HeroStage />
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* 2) BY DESIGN STRIP */}
+      <section
+        style={{
+          borderBottom: "1px solid var(--line)",
+          backgroundColor: "var(--surface)",
+          padding: "48px 0 36px",
+        }}
+      >
+        <Container>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: "24px",
+              paddingBottom: "36px",
+              borderBottom: "1px solid var(--line)",
+            }}
+          >
+            {/* Fact 1 */}
+            <div style={{ paddingRight: "16px" }}>
+              <div style={{ fontSize: "clamp(26px, 2.5vw, 36px)", fontWeight: 700, fontFamily: "var(--font-mono)", color: "var(--text)" }}>
+                13
+              </div>
+              <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--text)", marginTop: "4px" }}>
+                Flaw classes
+              </div>
+              <div style={{ fontSize: "13px", color: "var(--muted)", marginTop: "2px" }}>
+                Targeted access-control and secret rules
+              </div>
+            </div>
+
+            {/* Fact 2 */}
+            <div style={{ paddingLeft: "16px", borderLeft: "1px solid var(--line)" }}>
+              <div style={{ fontSize: "clamp(26px, 2.5vw, 36px)", fontWeight: 700, fontFamily: "var(--font-mono)", color: "var(--text)" }}>
+                Read-only
+              </div>
+              <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--text)", marginTop: "4px" }}>
+                GitHub access
+              </div>
+              <div style={{ fontSize: "13px", color: "var(--muted)", marginTop: "2px" }}>
+                Zero repository write permissions requested
+              </div>
+            </div>
+
+            {/* Fact 3 */}
+            <div style={{ paddingLeft: "16px", borderLeft: "1px solid var(--line)" }}>
+              <div style={{ fontSize: "clamp(26px, 2.5vw, 36px)", fontWeight: 700, fontFamily: "var(--font-mono)", color: "var(--text)" }}>
+                24 hours
+              </div>
+              <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--text)", marginTop: "4px" }}>
+                Maximum retention
+              </div>
+              <div style={{ fontSize: "13px", color: "var(--muted)", marginTop: "2px" }}>
+                Source code purged upon scan completion
+              </div>
+            </div>
+
+            {/* Fact 4 */}
+            <div style={{ paddingLeft: "16px", borderLeft: "1px solid var(--line)" }}>
+              <div style={{ fontSize: "clamp(26px, 2.5vw, 36px)", fontWeight: 700, fontFamily: "var(--font-mono)", color: "var(--text)" }}>
+                3 layers
+              </div>
+              <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--text)", marginTop: "4px" }}>
+                Analysis pipeline
+              </div>
+              <div style={{ fontSize: "13px", color: "var(--muted)", marginTop: "2px" }}>
+                Static AST, logic review, and dynamic sandbox
+              </div>
+            </div>
+          </div>
+
+          {/* Framework support sub-line */}
+          <div
+            style={{
+              paddingTop: "24px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              gap: "24px",
+              fontFamily: "var(--font-mono)",
+              fontSize: "13px",
+              color: "var(--muted)",
+            }}
+          >
+            <span>Release 1 supports:</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+              <span style={{ color: "var(--text)", fontWeight: 600, padding: "3px 10px", backgroundColor: "var(--sunken)", border: "1px solid var(--line)", borderRadius: "var(--radius-control)" }}>
+                Express
+              </span>
+              <span style={{ color: "var(--text)", fontWeight: 600, padding: "3px 10px", backgroundColor: "var(--sunken)", border: "1px solid var(--line)", borderRadius: "var(--radius-control)" }}>
+                Next.js
+              </span>
+              <span style={{ color: "var(--text)", fontWeight: 600, padding: "3px 10px", backgroundColor: "var(--sunken)", border: "1px solid var(--line)", borderRadius: "var(--radius-control)" }}>
+                FastAPI
+              </span>
+              <span style={{ color: "var(--text)", fontWeight: 600, padding: "3px 10px", backgroundColor: "var(--sunken)", border: "1px solid var(--line)", borderRadius: "var(--radius-control)" }}>
+                Flask
+              </span>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* 3) PROBLEM STORY */}
+      <section className="section section-bg">
+        <Container>
+          <div className="grid-12" style={{ alignItems: "start" }}>
+            {/* Left 5 columns */}
+            <div className="col-5">
+              <span className="eyebrow">The authorization gap</span>
+
+              <h2 className="section-h2">
+                AI builds the feature. It rarely builds the rules about who may use it.
+              </h2>
+
+              <p className="body-p" style={{ marginBottom: "28px" }}>
+                AI code generation assistants quickly create working API endpoints, but boilerplate prompts consistently omit authorization boundaries:
               </p>
+
+              {/* Numbered list with dividers (no boxes) */}
+              <div style={{ display: "flex", flexDirection: "column", marginBottom: "32px" }}>
+                <div style={{ padding: "16px 0", borderBottom: "1px solid var(--line)", display: "flex", gap: "16px", alignItems: "flex-start" }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "14px", fontWeight: 700, color: "var(--accent-text)" }}>01</span>
+                  <div>
+                    <div style={{ fontSize: "15px", fontWeight: 600, color: "var(--text)" }}>Unauthenticated state changes</div>
+                    <div style={{ fontSize: "14px", color: "var(--text-2)", marginTop: "2px" }}>POST and DELETE routes missing login middleware.</div>
+                  </div>
+                </div>
+
+                <div style={{ padding: "16px 0", borderBottom: "1px solid var(--line)", display: "flex", gap: "16px", alignItems: "flex-start" }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "14px", fontWeight: 700, color: "var(--accent-text)" }}>02</span>
+                  <div>
+                    <div style={{ fontSize: "15px", fontWeight: 600, color: "var(--text)" }}>Missing object ownership check</div>
+                    <div style={{ fontSize: "14px", color: "var(--text-2)", marginTop: "2px" }}>Users can access other tenants' data by guessing IDs.</div>
+                  </div>
+                </div>
+
+                <div style={{ padding: "16px 0", borderBottom: "1px solid var(--line)", display: "flex", gap: "16px", alignItems: "flex-start" }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "14px", fontWeight: 700, color: "var(--accent-text)" }}>03</span>
+                  <div>
+                    <div style={{ fontSize: "15px", fontWeight: 600, color: "var(--text)" }}>Role escalation via mass assignment</div>
+                    <div style={{ fontSize: "14px", color: "var(--text-2)", marginTop: "2px" }}>Request body payloads bind directly to internal role fields.</div>
+                  </div>
+                </div>
+
+                <div style={{ padding: "16px 0", borderBottom: "1px solid var(--line)", display: "flex", gap: "16px", alignItems: "flex-start" }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "14px", fontWeight: 700, color: "var(--accent-text)" }}>04</span>
+                  <div>
+                    <div style={{ fontSize: "15px", fontWeight: 600, color: "var(--text)" }}>Hardcoded credentials in repositories</div>
+                    <div style={{ fontSize: "14px", color: "var(--text-2)", marginTop: "2px" }}>API keys and tokens committed in client bundles and configs.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ fontSize: "14px", color: "var(--muted)", lineHeight: "1.6" }}>
+                Broken Access Control holds the #1 position on the{" "}
+                <a
+                  href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: "var(--accent-text)", textDecoration: "underline" }}
+                >
+                  OWASP Top 10
+                </a>{" "}
+                security risks, affecting 94% of audited web applications.
+              </div>
             </div>
-          ))}
-        </div>
+
+            {/* Right 7 columns */}
+            <div className="col-7">
+              <ProblemExplainer />
+            </div>
+          </div>
+        </Container>
       </section>
 
-      {/* Code Before & After Walkthrough */}
-      <section style={{ maxWidth: "1000px", margin: "0 auto 5rem auto" }}>
-        <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
-          <h2 style={{ fontSize: "2rem", marginBottom: "0.5rem", letterSpacing: "-0.02em" }}>
-            Actionable Findings with Exact Remediation
-          </h2>
-          <p style={{ color: "var(--muted)", maxWidth: "600px", margin: "0 auto", fontSize: "1rem" }}>
-            KAIRO explains what is broken, why it is dangerous, and provides copy-paste ready fixes.
-          </p>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.5rem" }}>
-          {/* Vulnerable Code */}
-          <div
-            className="card"
-            style={{
-              borderColor: "var(--sev-critical)",
-              backgroundColor: "var(--surface)",
-              padding: "1.5rem",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
-              <span
-                style={{
-                  width: "8px",
-                  height: "8px",
-                  borderRadius: "50%",
-                  backgroundColor: "var(--sev-critical)",
-                }}
-              />
-              <span style={{ fontWeight: 600, fontSize: "0.875rem", color: "var(--sev-critical)" }}>
-                Vulnerable Code (V01 + V08)
-              </span>
-            </div>
-            <pre
-              style={{
-                backgroundColor: "#11141A",
-                color: "#E5E9F0",
-                padding: "1rem",
-                borderRadius: "var(--radius-control)",
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.8125rem",
-                overflowX: "auto",
-                lineHeight: 1.5,
-              }}
-            >
-              <code>{`// Missing auth & SQL string interpolation
-app.post("/invoices/:id", async (req, res) => {
-  const { amount } = req.body;
-  // Flaw 1: Anyone can trigger update
-  // Flaw 2: Direct SQL interpolation
-  await db.query(
-    \`UPDATE invoices SET amt = \${amount} 
-     WHERE id = '\${req.params.id}'\`
-  );
-  res.json({ ok: true });
-});`}</code>
-            </pre>
-          </div>
-
-          {/* Remediated Code */}
-          <div
-            className="card"
-            style={{
-              borderColor: "var(--status-fixed)",
-              backgroundColor: "var(--surface)",
-              padding: "1.5rem",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
-              <span
-                style={{
-                  width: "8px",
-                  height: "8px",
-                  borderRadius: "50%",
-                  backgroundColor: "var(--status-fixed)",
-                }}
-              />
-              <span style={{ fontWeight: 600, fontSize: "0.875rem", color: "var(--status-fixed)" }}>
-                KAIRO Remediated Code
-              </span>
-            </div>
-            <pre
-              style={{
-                backgroundColor: "#11141A",
-                color: "#E5E9F0",
-                padding: "1rem",
-                borderRadius: "var(--radius-control)",
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.8125rem",
-                overflowX: "auto",
-                lineHeight: 1.5,
-              }}
-            >
-              <code>{`// Protected with auth & parameterized query
-app.post("/invoices/:id", requireAuth, async (req, res) => {
-  const { amount } = req.body;
-  // Fix 1: Verified user owns invoice
-  // Fix 2: Parameterized query ($1, $2)
-  await db.query(
-    \`UPDATE invoices SET amt = $1 
-     WHERE id = $2 AND owner_id = $3\`,
-    [amount, req.params.id, req.user.id]
-  );
-  res.json({ ok: true });
-});`}</code>
-            </pre>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust & Privacy Pillars */}
-      <section style={{ maxWidth: "1000px", margin: "0 auto 5rem auto" }}>
-        <div className="card" style={{ padding: "2.5rem", backgroundColor: "var(--surface)" }}>
-          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-            <h2 style={{ fontSize: "1.75rem", marginBottom: "0.5rem" }}>
-              Privacy and Trust by Design
-            </h2>
-            <p style={{ color: "var(--muted)", fontSize: "0.9375rem", maxWidth: "600px", margin: "0 auto" }}>
-              We treat your source code with absolute confidentiality and mathematical guarantees.
+      {/* 4) HOW IT WORKS (Alternating Chess Rows) */}
+      <section id="how-it-works" className="section section-surface">
+        <Container>
+          <div style={{ maxWidth: "720px", marginBottom: "80px" }}>
+            <span className="eyebrow">Walkthrough</span>
+            <h2 className="section-h2">How it works</h2>
+            <p className="lead-p" style={{ margin: 0 }}>
+              Three steps from repository connection to verified remediation.
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "2rem" }}>
-            <div>
-              <h3 style={{ fontSize: "1rem", fontWeight: 600, marginBottom: "0.35rem" }}>
-                24-Hour Automatic Erasure
+          {/* Step 1: Chess Row 1 (Text Left 5, Visual Right 7) */}
+          <div className="grid-12" style={{ alignItems: "center", marginBottom: "96px" }}>
+            <div className="col-5">
+              <div
+                style={{
+                  fontSize: "64px",
+                  fontWeight: 800,
+                  fontFamily: "var(--font-mono)",
+                  lineHeight: "1",
+                  color: "transparent",
+                  WebkitTextStroke: "1.5px var(--line-strong)",
+                  marginBottom: "16px",
+                }}
+              >
+                01
+              </div>
+              <h3 className="section-h3" style={{ marginBottom: "12px" }}>
+                Connect your repository
               </h3>
-              <p style={{ color: "var(--muted)", fontSize: "0.8125rem", lineHeight: 1.6, margin: 0 }}>
-                Uploaded ZIP archives and code clones are automatically wiped after 24 hours. Delete your project
-                at any time for instant purge.
+              <p className="body-p" style={{ marginBottom: "20px" }}>
+                Authorize KAIRO via GitHub OAuth. KAIRO requests read-only archive scope, clones the selected repository into an ephemeral worker, and generates an initial AST symbol table.
+              </p>
+              <Link
+                href="/how-it-works#step-1"
+                style={{ fontFamily: "var(--font-mono)", fontSize: "14px", fontWeight: 600, color: "var(--accent-text)" }}
+              >
+                Learn about repository intake scope →
+              </Link>
+            </div>
+            <div className="col-7">
+              <WalkthroughStage step={1} />
+            </div>
+          </div>
+
+          {/* Step 2: Chess Row 2 (Visual Left 7, Text Right 5) */}
+          <div className="grid-12" style={{ alignItems: "center", marginBottom: "96px" }}>
+            <div className="col-7">
+              <WalkthroughStage step={2} />
+            </div>
+            <div className="col-5">
+              <div
+                style={{
+                  fontSize: "64px",
+                  fontWeight: 800,
+                  fontFamily: "var(--font-mono)",
+                  lineHeight: "1",
+                  color: "transparent",
+                  WebkitTextStroke: "1.5px var(--line-strong)",
+                  marginBottom: "16px",
+                }}
+              >
+                02
+              </div>
+              <h3 className="section-h3" style={{ marginBottom: "12px" }}>
+                Multi-layer audit execution
+              </h3>
+              <p className="body-p" style={{ marginBottom: "20px" }}>
+                Static analysis maps all endpoints. Semantic logic review evaluates authorization predicates. Dynamic testing runs in an isolated gVisor container with zero outbound internet access to replay hypotheses.
+              </p>
+              <Link
+                href="/how-it-works#step-2"
+                style={{ fontFamily: "var(--font-mono)", fontSize: "14px", fontWeight: 600, color: "var(--accent-text)" }}
+              >
+                Explore our three analysis layers →
+              </Link>
+            </div>
+          </div>
+
+          {/* Step 3: Chess Row 3 (Text Left 5, Visual Right 7) */}
+          <div className="grid-12" style={{ alignItems: "center" }}>
+            <div className="col-5">
+              <div
+                style={{
+                  fontSize: "64px",
+                  fontWeight: 800,
+                  fontFamily: "var(--font-mono)",
+                  lineHeight: "1",
+                  color: "transparent",
+                  WebkitTextStroke: "1.5px var(--line-strong)",
+                  marginBottom: "16px",
+                }}
+              >
+                03
+              </div>
+              <h3 className="section-h3" style={{ marginBottom: "12px" }}>
+                Fix and export verified findings
+              </h3>
+              <p className="body-p" style={{ marginBottom: "20px" }}>
+                Every confirmed vulnerability comes with exact source code file and line citations, reproduction curl commands, and tested framework patches ready for review.
+              </p>
+              <Link
+                href="/how-it-works#step-3"
+                style={{ fontFamily: "var(--font-mono)", fontSize: "14px", fontWeight: 600, color: "var(--accent-text)" }}
+              >
+                Read about finding calibration and fixes →
+              </Link>
+            </div>
+            <div className="col-7">
+              <WalkthroughStage step={3} />
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* 5) THREE LAYERS */}
+      <section className="section section-bg">
+        <Container>
+          <div style={{ maxWidth: "720px", marginBottom: "48px" }}>
+            <span className="eyebrow">Analysis pipeline</span>
+            <h2 className="section-h2">Three layers, one report</h2>
+            <p className="lead-p" style={{ margin: 0 }}>
+              KAIRO cross-references static syntax, AI-assisted semantic logic, and empirical sandbox testing into a single calibrated report.
+            </p>
+          </div>
+
+          {/* Full Container Width Layer Diagram */}
+          <div style={{ marginBottom: "48px" }}>
+            <LayerDiagram />
+          </div>
+
+          {/* Three-Column Definition List (No Boxes) */}
+          <dl
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "32px",
+              margin: 0,
+              paddingTop: "24px",
+              borderTop: "1px solid var(--line)",
+            }}
+          >
+            <div>
+              <dt style={{ fontFamily: "var(--font-mono)", fontSize: "13px", fontWeight: 600, color: "var(--accent-text)", marginBottom: "6px" }}>
+                01. Static Engine
+              </dt>
+              <dd style={{ margin: 0, fontSize: "15px", color: "var(--text-2)", lineHeight: "1.6" }}>
+                Tree-sitter AST extraction discovers routes and middleware attachments without executing code.
+              </dd>
+            </div>
+
+            <div>
+              <dt style={{ fontFamily: "var(--font-mono)", fontSize: "13px", fontWeight: 600, color: "var(--accent-text)", marginBottom: "6px" }}>
+                02. Semantic Review
+              </dt>
+              <dd style={{ margin: 0, fontSize: "15px", color: "var(--text-2)", lineHeight: "1.6" }}>
+                AI-assisted logic reasoning compares developer intent with database filtering to catch IDOR vulnerabilities.
+              </dd>
+            </div>
+
+            <div>
+              <dt style={{ fontFamily: "var(--font-mono)", fontSize: "13px", fontWeight: 600, color: "var(--accent-text)", marginBottom: "6px" }}>
+                03. Dynamic Sandbox
+              </dt>
+              <dd style={{ margin: 0, fontSize: "15px", color: "var(--text-2)", lineHeight: "1.6" }}>
+                Offline gVisor kernel replays synthesized exploits against running servers to measure real HTTP status codes.
+              </dd>
+            </div>
+          </dl>
+        </Container>
+      </section>
+
+      {/* 6) COVERAGE EXPLORER TEASER */}
+      <section className="section section-surface">
+        <Container>
+          <div style={{ maxWidth: "720px", marginBottom: "40px" }}>
+            <span className="eyebrow">Flaw catalog</span>
+            <h2 className="section-h2">What KAIRO checks in Release 1</h2>
+            <p className="lead-p" style={{ margin: "0 0 16px" }}>
+              13 distinct flaw classes covering broken authorization, committed credentials, and web application injection.
+            </p>
+          </div>
+
+          <TabbedCoverage />
+
+          <div style={{ marginTop: "32px" }}>
+            <Link
+              href="/coverage"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "var(--accent-text)",
+                textDecoration: "underline",
+              }}
+            >
+              View detailed detection rules and code examples on the Coverage page →
+            </Link>
+          </div>
+        </Container>
+      </section>
+
+      {/* 7) REPORT SHOWCASE */}
+      <section className="section section-bg">
+        <Container>
+          <div style={{ maxWidth: "720px", marginBottom: "48px" }}>
+            <span className="eyebrow">Evidence-backed output</span>
+            <h2 className="section-h2">A report you can act on</h2>
+            <p className="lead-p" style={{ margin: "0 0 10px" }}>
+              Every finding includes reproducible code evidence, sandbox replay confirmation, and verified remediation diffs.
+            </p>
+            <div className="caption-p" style={{ fontFamily: "var(--font-mono)" }}>
+              A clean report never says your app is safe. It says what was checked and what was not.
+            </div>
+          </div>
+
+          <div className="grid-12" style={{ alignItems: "start" }}>
+            {/* Left 7 columns: Finding detail */}
+            <div className="col-7">
+              <WindowFrame path="app.kairo.dev/projects/acme-storefront-api/findings/KR-V01">
+                <div style={{ padding: "20px 24px", backgroundColor: "var(--surface)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "14px" }}>
+                    <div>
+                      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                        <span style={{ fontFamily: "var(--font-mono)", fontSize: "13px", fontWeight: 600, color: "var(--accent-text)" }}>
+                          KR-V01
+                        </span>
+                        <span className="badge-severity badge-high">▲ HIGH</span>
+                        <span
+                          style={{
+                            fontFamily: "var(--font-mono)",
+                            fontSize: "11px",
+                            padding: "2px 6px",
+                            backgroundColor: "var(--accent-tint)",
+                            color: "var(--accent-text)",
+                            border: "1px solid var(--accent)",
+                            borderRadius: "var(--radius-label)",
+                          }}
+                        >
+                          Confirmed by test
+                        </span>
+                      </div>
+                      <div style={{ fontSize: "16px", fontWeight: 600, color: "var(--text)", marginTop: "4px" }}>
+                        State-changing route without authentication
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ fontSize: "12px", fontFamily: "var(--font-mono)", color: "var(--muted)", marginBottom: "4px" }}>
+                    routes/orders.js:42
+                  </div>
+                  <pre
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "12px",
+                      lineHeight: "1.5",
+                      backgroundColor: "var(--sunken)",
+                      padding: "12px 14px",
+                      border: "1px solid var(--line)",
+                      borderRadius: "var(--radius-control)",
+                      color: "var(--text)",
+                      marginBottom: "14px",
+                    }}
+                  >
+                    <code>{`router.post('/orders', async (req, res) => {
+  // Flaw: Endpoint allows unauthenticated callers to write orders
+  const order = await db.orders.create(req.body);
+  return res.json(order);
+});`}</code>
+                  </pre>
+
+                  <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--text)", marginBottom: "6px" }}>
+                    Verified Fix
+                  </div>
+                  <pre
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "12px",
+                      lineHeight: "1.5",
+                      backgroundColor: "var(--sunken)",
+                      padding: "10px 14px",
+                      border: "1px solid var(--accent)",
+                      borderRadius: "var(--radius-control)",
+                      color: "var(--accent-text)",
+                    }}
+                  >
+                    <code>{`+ router.post('/orders', requireAuth, async (req, res) => {`}</code>
+                  </pre>
+                </div>
+              </WindowFrame>
+            </div>
+
+            {/* Right 5 columns: Export formats & numbered list */}
+            <div className="col-5">
+              <h3 className="section-h3" style={{ marginBottom: "12px" }}>
+                Three deterministic export formats
+              </h3>
+              <p className="body-p" style={{ marginBottom: "24px" }}>
+                Reports can be consumed by engineering leads, security reviewers, and automated CI pipelines.
+              </p>
+
+              {/* Exports stage (PDF, SARIF, JSON overlapping sheets) */}
+              <div style={{ marginBottom: "32px" }}>
+                <ExportsStage />
+              </div>
+
+              {/* Numbered list of what each finding contains */}
+              <div style={{ borderTop: "1px solid var(--line)", paddingTop: "20px" }}>
+                <div style={{ fontSize: "13px", fontFamily: "var(--font-mono)", fontWeight: 600, color: "var(--text)", marginBottom: "12px" }}>
+                  EACH FINDING CONTAINS:
+                </div>
+                <ol style={{ paddingLeft: "20px", fontSize: "14px", color: "var(--text-2)", lineHeight: "1.8" }}>
+                  <li>Exact file path and line number citation</li>
+                  <li>Unauthenticated curl reproduction command</li>
+                  <li>Calibrated confidence rating (Confirmed, Likely, Possible)</li>
+                  <li>Tested framework patch ready for review</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* 8) TRUST MOMENT (Inverted Section) */}
+      <section className="section section-inverted">
+        <Container>
+          <div style={{ maxWidth: "720px", marginBottom: "48px" }}>
+            <span className="eyebrow inverted-accent">Trust and security</span>
+            <h2 style={{ fontSize: "clamp(32px, 3.4vw, 48px)", fontWeight: 600, lineHeight: 1.12, letterSpacing: "-0.015em", color: "inherit", marginBottom: "16px" }}>
+              Built so you can trust it with your code
+            </h2>
+            <p style={{ fontSize: "18px", lineHeight: 1.5, opacity: 0.85, margin: 0 }}>
+              Your source code constitutes sensitive proprietary intellectual property. KAIRO enforces strict physical and logical boundaries throughout the scan lifecycle.
+            </p>
+          </div>
+
+          {/* Full Width Trust Diagram */}
+          <div style={{ marginBottom: "48px" }}>
+            <TrustDiagram />
+          </div>
+
+          {/* Two-Column List of Plain Facts */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: "40px",
+              paddingTop: "32px",
+              borderTop: "1px solid rgba(255, 255, 255, 0.15)",
+            }}
+          >
+            <div>
+              <h3 style={{ fontSize: "18px", fontWeight: 600, color: "inherit", marginBottom: "8px" }}>
+                Zero model training
+              </h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.6", opacity: 0.85, margin: 0 }}>
+                We never use customer source code or vulnerability reports to train machine learning models. AI logic review remains turned off by default until approved strict data processing agreements are in place.
               </p>
             </div>
 
             <div>
-              <h3 style={{ fontSize: "1rem", fontWeight: 600, marginBottom: "0.35rem" }}>
-                Zero Customer Model Training
+              <h3 style={{ fontSize: "18px", fontWeight: 600, color: "inherit", marginBottom: "8px" }}>
+                Strict 24-hour maximum retention
               </h3>
-              <p style={{ color: "var(--muted)", fontSize: "0.8125rem", lineHeight: 1.6, margin: 0 }}>
-                We operate under strict zero-data-retention agreements. Your private code is never logged, cached,
-                or used to train language models.
-              </p>
-            </div>
-
-            <div>
-              <h3 style={{ fontSize: "1rem", fontWeight: 600, marginBottom: "0.35rem" }}>
-                Envelope Encryption (AES-256-GCM)
-              </h3>
-              <p style={{ color: "var(--muted)", fontSize: "0.8125rem", lineHeight: 1.6, margin: 0 }}>
-                Sensitive environment variables and test account credentials are encrypted with unique per-project
-                keys stored independently from application databases.
-              </p>
-            </div>
-
-            <div>
-              <h3 style={{ fontSize: "1rem", fontWeight: 600, marginBottom: "0.35rem" }}>
-                Strictly Necessary Cookies Only
-              </h3>
-              <p style={{ color: "var(--muted)", fontSize: "0.8125rem", lineHeight: 1.6, margin: 0 }}>
-                No tracking cookies. No third-party ad networks. We store only your encrypted session cookie
-                and CSRF token.
+              <p style={{ fontSize: "15px", lineHeight: "1.6", opacity: 0.85, margin: 0 }}>
+                Ephemeral repository clone archives are wiped immediately upon scan completion. No source files are ever stored longer than 24 hours under any circumstances.
               </p>
             </div>
           </div>
-        </div>
+        </Container>
       </section>
 
-      {/* FAQ Accordion Section */}
-      <section style={{ maxWidth: "800px", margin: "0 auto 5rem auto" }}>
-        <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
-          <h2 style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>Frequently Asked Questions</h2>
-          <p style={{ color: "var(--muted)", fontSize: "0.9375rem" }}>
-            Common questions about KAIRO security scans, sandboxing, and data privacy.
-          </p>
-        </div>
+      {/* 9) LIMITS AND ROADMAP (In One Row) */}
+      <section className="section section-surface">
+        <Container>
+          <div className="grid-12" style={{ alignItems: "start" }}>
+            {/* Left 6 columns: What KAIRO does not do (Plain list) */}
+            <div className="col-6">
+              <span className="eyebrow">Boundaries</span>
+              <h2 className="section-h2">What KAIRO does not do</h2>
+              <p className="lead-p" style={{ marginBottom: "28px" }}>
+                Honest limits prevent false security confidence.
+              </p>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          {FAQS.map((faq, idx) => (
-            <div key={idx} className="card" style={{ padding: "1.25rem 1.5rem" }}>
-              <h3 style={{ fontSize: "1rem", fontWeight: 600, marginBottom: "0.5rem" }}>{faq.q}</h3>
-              <p style={{ color: "var(--muted)", fontSize: "0.875rem", lineHeight: 1.6, margin: 0 }}>
-                {faq.a}
+              <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                <div style={{ paddingBottom: "16px", borderBottom: "1px solid var(--line)" }}>
+                  <div style={{ fontSize: "16px", fontWeight: 600, color: "var(--text)" }}>
+                    Not a penetration test or compliance certification
+                  </div>
+                  <div style={{ fontSize: "14px", color: "var(--text-2)", marginTop: "4px", lineHeight: "1.6" }}>
+                    KAIRO tests code against 13 specific vulnerability rules. It is not an alternative to manual human red-team assessments or formal SOC2/ISO audit certifications.
+                  </div>
+                </div>
+
+                <div style={{ paddingBottom: "16px", borderBottom: "1px solid var(--line)" }}>
+                  <div style={{ fontSize: "16px", fontWeight: 600, color: "var(--text)" }}>
+                    Does not attack live production environments
+                  </div>
+                  <div style={{ fontSize: "14px", color: "var(--text-2)", marginTop: "4px", lineHeight: "1.6" }}>
+                    Release 1 executes dynamic tests solely inside synthetic, isolated sandboxes. It never sends test payloads to your live customer-facing domains.
+                  </div>
+                </div>
+
+                <div style={{ paddingBottom: "16px", borderBottom: "1px solid var(--line)" }}>
+                  <div style={{ fontSize: "16px", fontWeight: 600, color: "var(--text)" }}>
+                    Cannot test dependencies requiring external third-party services
+                  </div>
+                  <div style={{ fontSize: "14px", color: "var(--text-2)", marginTop: "4px", lineHeight: "1.6" }}>
+                    Workflows that require SMS gateways, external OAuth provider redirects, or live payment webhooks cannot execute inside the offline sandbox.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right 6 columns: Roadmap (Two-Step Vertical Timeline, No Boxes) */}
+            <div className="col-6">
+              <span className="eyebrow">Development plan</span>
+              <h2 className="section-h2">Roadmap</h2>
+              <p className="lead-p" style={{ marginBottom: "28px" }}>
+                Current milestone capabilities and planned additions.
+              </p>
+
+              <div style={{ position: "relative", paddingLeft: "32px", borderLeft: "2px solid var(--line)" }}>
+                {/* Milestone 1 */}
+                <div style={{ position: "relative", marginBottom: "40px" }}>
+                  <span
+                    style={{
+                      position: "absolute",
+                      left: "-38px",
+                      top: "4px",
+                      width: "10px",
+                      height: "10px",
+                      borderRadius: "50%",
+                      backgroundColor: "var(--accent)",
+                      border: "2px solid var(--bg)",
+                    }}
+                  />
+                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: 600, color: "var(--accent-text)", textTransform: "uppercase" }}>
+                    ACTIVE DEVELOPMENT // RELEASE 1
+                  </div>
+                  <div style={{ fontSize: "18px", fontWeight: 600, color: "var(--text)", marginTop: "4px" }}>
+                    Core Audit Engine
+                  </div>
+                  <ul style={{ paddingLeft: "18px", fontSize: "14px", color: "var(--text-2)", lineHeight: "1.7", marginTop: "8px" }}>
+                    <li>Static route analysis for Express, Next.js, FastAPI, and Flask</li>
+                    <li>Isolated gVisor dynamic sandbox execution</li>
+                    <li>13 vulnerability classes (KR-V01 to KR-V13)</li>
+                    <li>Deterministic export formats: PDF, JSON, and SARIF</li>
+                  </ul>
+                </div>
+
+                {/* Milestone 2 */}
+                <div style={{ position: "relative" }}>
+                  <span
+                    style={{
+                      position: "absolute",
+                      left: "-38px",
+                      top: "4px",
+                      width: "10px",
+                      height: "10px",
+                      borderRadius: "50%",
+                      backgroundColor: "var(--muted)",
+                      border: "2px solid var(--bg)",
+                    }}
+                  />
+                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: 600, color: "var(--muted)", textTransform: "uppercase" }}>
+                    PLANNED // RELEASE 2
+                  </div>
+                  <div style={{ fontSize: "18px", fontWeight: 600, color: "var(--text)", marginTop: "4px" }}>
+                    Continuous Verification
+                  </div>
+                  <ul style={{ paddingLeft: "18px", fontSize: "14px", color: "var(--text-2)", lineHeight: "1.7", marginTop: "8px" }}>
+                    <li>GitHub Pull Request verification checks and commit statuses</li>
+                    <li>Additional frameworks: Django, Ruby on Rails, and Go Chi</li>
+                    <li>Verified staging environment replay with synthetic test data</li>
+                    <li>Multi-user team workspaces with role-based permissions</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* 10) FAQ */}
+      <section className="section section-bg">
+        <Container>
+          <div className="grid-12" style={{ alignItems: "start" }}>
+            {/* Left 4 columns: Heading and note */}
+            <div className="col-4">
+              <span className="eyebrow">FAQ</span>
+              <h2 className="section-h2">Frequently asked questions</h2>
+              <p className="body-p">
+                Direct answers regarding testing mechanics, data handling, and project status.
               </p>
             </div>
-          ))}
-        </div>
+
+            {/* Right 8 columns: Accordion */}
+            <div className="col-8">
+              <FAQAccordion />
+            </div>
+          </div>
+        </Container>
       </section>
 
-      {/* Pre-footer Call to Action */}
-      <section
-        style={{
-          maxWidth: "800px",
-          margin: "0 auto",
-          textAlign: "center",
-          padding: "3rem 1.5rem",
-          backgroundColor: "var(--surface)",
-          borderRadius: "var(--radius-card)",
-          border: "1px solid var(--line)",
-        }}
-      >
-        <h2 style={{ fontSize: "2rem", marginBottom: "0.75rem", letterSpacing: "-0.02em" }}>
-          Secure your applications before production launch.
-        </h2>
-        <p style={{ color: "var(--muted)", fontSize: "1rem", marginBottom: "1.75rem", maxWidth: "560px", margin: "0 auto 1.75rem auto" }}>
-          Connect a GitHub repository or drop a ZIP archive to generate your first access-control audit report.
-        </p>
-        <Link
-          href="/sign-in"
-          className="btn btn-primary"
-          style={{ fontSize: "1rem", padding: "0.75rem 2rem" }}
-        >
-          Sign in and audit code &rarr;
-        </Link>
-      </section>
+      {/* 11) FINAL CALL TO ACTION */}
+      <CTASection />
     </div>
   );
 }

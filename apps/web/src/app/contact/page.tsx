@@ -1,264 +1,145 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
+import { Container } from "@/components/Container";
+import { ContactCard } from "@/components/ContactCard";
+
+export const metadata = {
+  title: "Contact & Communication Channels: KAIRO",
+  description:
+    "Direct contact addresses for technical support, privacy requests, security disclosure, and platform abuse reports.",
+};
 
 export default function ContactPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [category, setCategory] = useState("general");
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !email.trim() || !message.trim()) {
-      setError("Please fill out all required fields.");
-      return;
-    }
-    setError(null);
-    setSubmitting(true);
-
-    // Simulate reliable message dispatch
-    setTimeout(() => {
-      setSubmitting(false);
-      setSubmitted(true);
-    }, 600);
-  };
+  const isDev = process.env.NODE_ENV !== "production";
 
   return (
-    <div className="container" style={{ padding: "4rem 1.5rem", maxWidth: "900px" }}>
-      {/* Header */}
-      <div style={{ marginBottom: "2.5rem", borderBottom: "1px solid var(--line)", paddingBottom: "1.5rem" }}>
-        <div
-          style={{
-            fontSize: "0.75rem",
-            fontWeight: 600,
-            textTransform: "uppercase",
-            letterSpacing: "0.06em",
-            color: "var(--accent-text)",
-            marginBottom: "0.5rem",
-          }}
-        >
-          Support &amp; Maintainers
-        </div>
-        <h1 style={{ fontSize: "2.5rem", marginBottom: "0.5rem", letterSpacing: "-0.02em" }}>
-          Contact &amp; Support
-        </h1>
-        <p style={{ color: "var(--muted)", fontSize: "0.875rem", margin: 0 }}>
-          Reach out to the KAIRO maintainers for support, vulnerability disclosures, or deployment assistance.
-        </p>
-      </div>
+    <div style={{ position: "relative" }}>
+      <section className="section section-bg">
+        <Container>
+          <div className="grid-12" style={{ alignItems: "start" }}>
+            {/* Left 5 Columns */}
+            <div className="col-5">
+              <span className="eyebrow">Communication channels</span>
+              <h1 className="hero-h1" style={{ fontSize: "clamp(36px, 4vw, 52px)", marginBottom: "16px" }}>
+                Contact the team
+              </h1>
+              <p className="lead-p" style={{ marginBottom: "32px" }}>
+                KAIRO sends no automated marketing emails. Reach out directly to our operational inboxes using the verified addresses on this page.
+              </p>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2.5rem" }}>
-        {/* Contact Form */}
-        <div>
-          <h2 style={{ fontSize: "1.25rem", marginBottom: "1rem" }}>Send a Message</h2>
-
-          {submitted ? (
-            <div
-              className="card"
-              style={{
-                backgroundColor: "var(--surface)",
-                borderColor: "var(--status-fixed)",
-                padding: "2rem",
-                textAlign: "center",
-              }}
-            >
+              {/* Before you write list */}
               <div
                 style={{
-                  width: "44px",
-                  height: "44px",
-                  borderRadius: "50%",
-                  backgroundColor: "var(--status-fixed-bg)",
-                  color: "var(--status-fixed)",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "1.25rem",
-                  marginBottom: "1rem",
+                  padding: "24px",
+                  backgroundColor: "var(--surface)",
+                  border: "1px solid var(--line)",
+                  borderRadius: "var(--radius-card)",
                 }}
               >
-                &#10003;
-              </div>
-              <h3 style={{ fontSize: "1.125rem", marginBottom: "0.5rem" }}>Message Received</h3>
-              <p style={{ color: "var(--muted)", fontSize: "0.875rem", lineHeight: 1.6, marginBottom: "1.5rem" }}>
-                Thank you for reaching out, {name}. Our maintainers have received your inquiry and will respond to{" "}
-                <strong>{email}</strong> within 24 to 48 business hours.
-              </p>
-              <button
-                onClick={() => {
-                  setSubmitted(false);
-                  setMessage("");
-                  setSubject("");
-                }}
-                className="btn btn-secondary"
-                style={{ fontSize: "0.8125rem" }}
-              >
-                Send Another Message
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="card" style={{ padding: "1.75rem" }}>
-              {error && (
-                <div
+                <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--text)", marginBottom: "12px" }}>
+                  Before you write:
+                </div>
+                <ul
                   style={{
-                    backgroundColor: "var(--sev-critical-bg)",
-                    color: "var(--sev-critical)",
-                    padding: "0.5rem 0.75rem",
-                    borderRadius: "var(--radius-control)",
-                    fontSize: "0.8125rem",
-                    marginBottom: "1rem",
+                    paddingLeft: "18px",
+                    margin: 0,
+                    fontSize: "14px",
+                    color: "var(--text-2)",
+                    lineHeight: "1.7",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
                   }}
                 >
-                  {error}
-                </div>
-              )}
-
-              <div style={{ marginBottom: "1rem" }}>
-                <label style={{ display: "block", fontSize: "0.8125rem", fontWeight: 600, marginBottom: "0.35rem" }}>
-                  Your Name *
-                </label>
-                <input
-                  type="text"
-                  className="input"
-                  placeholder="e.g. Alex Morgan"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
+                  <li>
+                    <strong>Check documentation:</strong> For questions regarding AST parsing or sandbox mechanics, consult the{" "}
+                    <Link href="/how-it-works" style={{ color: "var(--accent-text)", textDecoration: "underline" }}>
+                      walkthrough
+                    </Link>{" "}
+                    or{" "}
+                    <Link href="/coverage" style={{ color: "var(--accent-text)", textDecoration: "underline" }}>
+                      coverage catalog
+                    </Link>.
+                  </li>
+                  <li>
+                    <strong>Security disclosures:</strong> Please review our{" "}
+                    <Link href="/security" style={{ color: "var(--accent-text)", textDecoration: "underline" }}>
+                      responsible disclosure policy
+                    </Link>{" "}
+                    prior to transmitting vulnerability details.
+                  </li>
+                  <li>
+                    <strong>Include reproduction steps:</strong> State your framework, error trace, and scan identifier where applicable.
+                  </li>
+                </ul>
               </div>
+            </div>
 
-              <div style={{ marginBottom: "1rem" }}>
-                <label style={{ display: "block", fontSize: "0.8125rem", fontWeight: 600, marginBottom: "0.35rem" }}>
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  className="input"
-                  placeholder="name@company.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div style={{ marginBottom: "1rem" }}>
-                <label style={{ display: "block", fontSize: "0.8125rem", fontWeight: 600, marginBottom: "0.35rem" }}>
-                  Topic Category *
-                </label>
-                <select
-                  className="input"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  style={{ padding: "0.5rem 0.75rem" }}
-                >
-                  <option value="general">General Inquiry</option>
-                  <option value="security">Security Vulnerability Disclosure</option>
-                  <option value="enterprise">Self-Hosted Deployment</option>
-                  <option value="bug">Bug Report / Platform Feedback</option>
-                  <option value="privacy">Privacy &amp; Data Deletion Request</option>
-                </select>
-              </div>
-
-              <div style={{ marginBottom: "1rem" }}>
-                <label style={{ display: "block", fontSize: "0.8125rem", fontWeight: 600, marginBottom: "0.35rem" }}>
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  className="input"
-                  placeholder="Brief summary of your inquiry"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                />
-              </div>
-
-              <div style={{ marginBottom: "1.5rem" }}>
-                <label style={{ display: "block", fontSize: "0.8125rem", fontWeight: 600, marginBottom: "0.35rem" }}>
-                  Message *
-                </label>
-                <textarea
-                  className="textarea"
-                  rows={5}
-                  placeholder="Describe your inquiry, steps to reproduce, or questions..."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  required
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={submitting}
-                style={{ width: "100%", padding: "0.625rem" }}
+            {/* Right 7 Columns: 2x2 Grid of Equal Cards (No Orphan Card) */}
+            <div className="col-7">
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, 1fr)",
+                  gap: "20px",
+                }}
               >
-                {submitting ? "Sending..." : "Submit Message"}
-              </button>
-            </form>
-          )}
-        </div>
+                {/* Inbox 1 */}
+                <ContactCard
+                  title="Technical Support & Bugs"
+                  email={process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "support@kairo.example"}
+                  isExampleDomain={isDev}
+                  targetResponse="2 business days"
+                  checklist={[
+                    "Framework & version (e.g. Express 4.19)",
+                    "Scan ID (e.g. scn_98b2c4)",
+                    "Observed vs expected outcome",
+                  ]}
+                />
 
-        {/* Department Directory & SLA */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-          <div>
-            <h2 style={{ fontSize: "1.25rem", marginBottom: "1rem" }}>Direct Department Inboxes</h2>
-            <p style={{ color: "var(--muted)", fontSize: "0.875rem", lineHeight: 1.6, marginBottom: "1.25rem" }}>
-              Prefer to email us directly? Route your message to the appropriate functional mailbox:
-            </p>
-          </div>
+                {/* Inbox 2 */}
+                <ContactCard
+                  title="Privacy & Data Subject Rights"
+                  email={process.env.NEXT_PUBLIC_PRIVACY_EMAIL || "privacy@kairo.example"}
+                  isExampleDomain={isDev}
+                  targetResponse="5 business days"
+                  checklist={[
+                    "Registered GitHub username",
+                    "Specific right requested (access/erasure)",
+                    "Project identifiers or scan timestamps",
+                  ]}
+                />
 
-          <div className="card" style={{ padding: "1.25rem" }}>
-            <div style={{ fontWeight: 600, fontSize: "0.9375rem" }}>Security &amp; Vulnerability Reports</div>
-            <p style={{ color: "var(--muted)", fontSize: "0.8125rem", margin: "0.25rem 0 0.5rem 0" }}>
-              For responsible disclosure of platform vulnerabilities or security advisories.
-            </p>
-            <a href="mailto:security@kairo.dev" style={{ fontSize: "0.875rem", color: "var(--accent)" }}>
-              security@kairo.dev
-            </a>
-            <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: "0.35rem" }}>
-              SLA: Acknowledged within 48 business hours
+                {/* Inbox 3 */}
+                <ContactCard
+                  title="Security Vulnerability Reports"
+                  email={process.env.NEXT_PUBLIC_SECURITY_EMAIL || "security@kairo.example"}
+                  isExampleDomain={isDev}
+                  targetResponse="48 hours"
+                  checklist={[
+                    "Vulnerability summary & impacted zone",
+                    "Step-by-step reproduction curl script",
+                    "Public key if encrypted reply requested",
+                  ]}
+                />
+
+                {/* Inbox 4 */}
+                <ContactCard
+                  title="Abuse & Unauthorized Scans"
+                  email={process.env.NEXT_PUBLIC_ABUSE_EMAIL || "abuse@kairo.example"}
+                  isExampleDomain={isDev}
+                  targetResponse="24 hours"
+                  checklist={[
+                    "Target repository URL",
+                    "Proof of repository ownership",
+                    "Evidence of unauthorized audit execution",
+                  ]}
+                />
+              </div>
             </div>
           </div>
-
-          <div className="card" style={{ padding: "1.25rem" }}>
-            <div style={{ fontWeight: 600, fontSize: "0.9375rem" }}>Privacy &amp; Data Rights</div>
-            <p style={{ color: "var(--muted)", fontSize: "0.8125rem", margin: "0.25rem 0 0.5rem 0" }}>
-              For data access requests, deletion verifications, and compliance matters.
-            </p>
-            <a href="mailto:privacy@kairo.dev" style={{ fontSize: "0.875rem", color: "var(--accent)" }}>
-              privacy@kairo.dev
-            </a>
-            <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: "0.35rem" }}>
-              SLA: Processed within 48 business hours
-            </div>
-          </div>
-
-          <div className="card" style={{ padding: "1.25rem" }}>
-            <div style={{ fontWeight: 600, fontSize: "0.9375rem" }}>General Support &amp; Integration</div>
-            <p style={{ color: "var(--muted)", fontSize: "0.8125rem", margin: "0.25rem 0 0.5rem 0" }}>
-              For GitHub integration troubleshooting, ZIP upload issues, and general platform inquiries.
-            </p>
-            <a href="mailto:support@kairo.dev" style={{ fontSize: "0.875rem", color: "var(--accent)" }}>
-              support@kairo.dev
-            </a>
-            <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: "0.35rem" }}>
-              SLA: Answered within 24 business hours
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Back link */}
-      <div style={{ marginTop: "3rem", borderTop: "1px solid var(--line)", paddingTop: "1.5rem" }}>
-        <Link href="/" style={{ color: "var(--muted)", textDecoration: "none", fontSize: "0.875rem" }}>
-          &larr; Back to Home
-        </Link>
-      </div>
+        </Container>
+      </section>
     </div>
   );
 }

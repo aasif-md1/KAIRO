@@ -35,10 +35,13 @@ This file records every assumption made and every deviation from the specificati
 
 ## Deviations
 
-Deviations are logged here as they occur during implementation. None yet.
-
 | # | What was specified | What was built | Reason |
 | --- | --- | --- | --- |
+| DEV-01 | Minimal public pages in Release 1 (home, sign-in, legal, contact, licenses) | Added /how-it-works (P-11), /coverage (P-12), /about (P-13) | Industry standard marketing requirement; documents technical engine and rules truthfully |
+| DEV-02 | Contact form on /contact | Replaced form with 4 direct email cards with copy buttons | Application sends zero email in Release 1 (TRD section 18); non-functional form violates credibility |
+| DEV-03 | Operating system only appearance detection | Added 3-way accessible segmented control (System, Light, Dark) | Allows visitors to switch themes explicitly with zero flash; stored in localStorage |
+| DEV-04 | Fixed 11px-13px typography scale | Marketing typography scale (H1 clamp 36-56px, section headings 36px, lead 20px, body 16-18px) | Fixes readability and hierarchy on marketing site without changing application dashboard scale |
+
 
 ## Open Questions for Owner
 

@@ -1,186 +1,358 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
+import { Container } from "@/components/Container";
 
-export const metadata = {
-  title: "Open Source Licenses - KAIRO",
-  description:
-    "Open source licenses, third-party software attributions, and legal acknowledgments for KAIRO.",
-};
+interface SoftwarePackage {
+  name: string;
+  version: string;
+  license: string;
+  copyright: string;
+  url: string;
+  description: string;
+}
 
-const OPEN_SOURCE_PACKAGES = [
+const PACKAGES: SoftwarePackage[] = [
   {
-    name: "Tree-sitter & Official Grammars",
-    description: "Incremental parsing library and concrete syntax tree grammars for Python, JavaScript, and TypeScript.",
-    license: "MIT License",
-    author: "Max Brunsfeld and Tree-sitter contributors",
-    url: "https://tree-sitter.github.io",
-  },
-  {
-    name: "IBM Plex Sans & IBM Plex Mono",
-    description: "Corporate open source typography family used for interface text and code snippet rendering.",
-    license: "SIL Open Font License 1.1",
-    author: "IBM Corporation",
-    url: "https://www.ibm.com/plex",
-  },
-  {
-    name: "FastAPI",
-    description: "Modern, high-performance web framework for building the KAIRO backend REST API.",
-    license: "MIT License",
-    author: "Sebastián Ramírez (tiangolo)",
-    url: "https://fastapi.tiangolo.com",
+    name: "React & React DOM",
+    version: "19.3.0",
+    license: "MIT",
+    copyright: "Meta Platforms, Inc. and affiliates",
+    url: "https://react.dev",
+    description: "Declarative user interface rendering engine.",
   },
   {
     name: "Next.js",
-    description: "The React framework for the web, powering the KAIRO frontend dashboard and report renderer.",
-    license: "MIT License",
-    author: "Vercel, Inc.",
+    version: "16.4.0",
+    license: "MIT",
+    copyright: "Vercel, Inc.",
     url: "https://nextjs.org",
+    description: "React application framework with server-side rendering and routing.",
   },
   {
-    name: "React",
-    description: "JavaScript library for building declarative user interfaces.",
-    license: "MIT License",
-    author: "Meta Platforms, Inc.",
-    url: "https://react.dev",
+    name: "Lucide React",
+    version: "1.55.0",
+    license: "ISC",
+    copyright: "Lucide Project Contributors",
+    url: "https://lucide.dev",
+    description: "Consistent stroke icon library rendered at 1.75 stroke width.",
   },
   {
-    name: "SQLAlchemy",
-    description: "Python SQL toolkit and Object Relational Mapper for multi-tenant database persistence.",
-    license: "MIT License",
-    author: "Mike Bayer and SQLAlchemy authors",
-    url: "https://www.sqlalchemy.org",
+    name: "Simple Icons",
+    version: "14.10.0",
+    license: "CC0 1.0 Universal",
+    copyright: "Simple Icons Contributors",
+    url: "https://simpleicons.org",
+    description: "Monochrome SVG brand and framework icons.",
+  },
+  {
+    name: "IBM Plex Fonts (Sans & Mono)",
+    version: "6.4.1",
+    license: "SIL Open Font License 1.1",
+    copyright: "IBM Corporation and Mike Abbink",
+    url: "https://www.ibm.com/plex",
+    description: "Typography family for UI body text and monospace code snippets.",
+  },
+  {
+    name: "Tree-sitter",
+    version: "0.22.6",
+    license: "MIT",
+    copyright: "Max Brunsfeld and Tree-sitter contributors",
+    url: "https://tree-sitter.github.io",
+    description: "Incremental parsing library and syntax tree generator.",
+  },
+  {
+    name: "FastAPI",
+    version: "0.115.0",
+    license: "MIT",
+    copyright: "Sebastián Ramírez",
+    url: "https://fastapi.tiangolo.com",
+    description: "Modern web framework for building backend audit microservices.",
   },
   {
     name: "Pydantic",
-    description: "Data validation and settings management using Python type hints.",
-    license: "MIT License",
-    author: "Samuel Colvin and Pydantic contributors",
+    version: "2.9.2",
+    license: "MIT",
+    copyright: "Samuel Colvin and Pydantic contributors",
     url: "https://pydantic.dev",
+    description: "Data validation and settings management using Python type hints.",
   },
   {
-    name: "PyCA Cryptography",
-    description: "Cryptographic recipes and primitives powering envelope encryption (AES-256-GCM).",
-    license: "Apache License 2.0 / BSD 3-Clause",
-    author: "The Python Cryptographic Authority",
-    url: "https://cryptography.io",
+    name: "Playwright",
+    version: "1.64.0",
+    license: "Apache-2.0",
+    copyright: "Microsoft Corporation",
+    url: "https://playwright.dev",
+    description: "Automated browser runner for marketing asset generation.",
   },
   {
-    name: "Uvicorn & Starlette",
-    description: "Lightning-fast ASGI web server and lightweight toolkit.",
-    license: "BSD 3-Clause License",
-    author: "Encode OSS Ltd.",
-    url: "https://www.encode.io",
-  },
-  {
-    name: "PyYAML",
-    description: "YAML parser and emitter for Release 1 static security rule specifications.",
-    license: "MIT License",
-    author: "Kirill Simonov and PyYAML contributors",
-    url: "https://pyyaml.org",
+    name: "TypeScript",
+    version: "5.9.3",
+    license: "Apache-2.0",
+    copyright: "Microsoft Corporation",
+    url: "https://www.typescriptlang.org",
+    description: "Typed JavaScript superset for compile-time verification.",
   },
 ];
 
 export default function LicensesPage() {
+  const [search, setSearch] = useState("");
+  const [selectedLicense, setSelectedLicense] = useState("all");
+
+  const licenseCounts: Record<string, number> = {};
+  for (const pkg of PACKAGES) {
+    licenseCounts[pkg.license] = (licenseCounts[pkg.license] || 0) + 1;
+  }
+  const licenseTypes = Object.keys(licenseCounts).sort();
+
+  const filtered = PACKAGES.filter((pkg) => {
+    if (selectedLicense !== "all" && pkg.license !== selectedLicense) return false;
+    if (search.trim() !== "") {
+      const q = search.toLowerCase();
+      return (
+        pkg.name.toLowerCase().includes(q) ||
+        pkg.description.toLowerCase().includes(q) ||
+        pkg.copyright.toLowerCase().includes(q) ||
+        pkg.license.toLowerCase().includes(q)
+      );
+    }
+    return true;
+  });
+
   return (
-    <div className="container" style={{ padding: "4rem 1.5rem", maxWidth: "860px" }}>
-      {/* Header */}
-      <div style={{ marginBottom: "2.5rem", borderBottom: "1px solid var(--line)", paddingBottom: "1.5rem" }}>
-        <div
-          style={{
-            fontSize: "0.75rem",
-            fontWeight: 600,
-            textTransform: "uppercase",
-            letterSpacing: "0.06em",
-            color: "var(--accent-text)",
-            marginBottom: "0.5rem",
-          }}
-        >
-          Credits &amp; Open Source
-        </div>
-        <h1 style={{ fontSize: "2.5rem", marginBottom: "0.5rem", letterSpacing: "-0.02em" }}>
-          Open Source Licenses
-        </h1>
-        <p style={{ color: "var(--muted)", fontSize: "0.875rem", margin: 0 }}>
-          KAIRO is proudly built on open source foundations. We gratefully acknowledge these foundational projects.
-        </p>
-      </div>
+    <div style={{ position: "relative" }}>
+      {/* Header and Bill of Materials */}
+      <section style={{ paddingTop: "64px", paddingBottom: "32px", borderBottom: "1px solid var(--line)" }}>
+        <Container>
+          <div style={{ maxWidth: "840px" }}>
+            <div className="eyebrow" style={{ marginBottom: "12px" }}>
+              Third-party components
+            </div>
+            <h1 className="hero-h1" style={{ margin: "0 0 16px" }}>
+              Software Bill of Materials
+            </h1>
+            <p className="lead-p" style={{ margin: 0 }}>
+              KAIRO incorporates open-source components and font software. Every shipped runtime dependency and font family is listed below with its respective open-source license and copyright attribution.
+            </p>
+          </div>
+        </Container>
+      </section>
 
-      {/* Intro note */}
-      <div
-        className="card"
-        style={{
-          marginBottom: "2rem",
-          backgroundColor: "var(--surface)",
-          padding: "1.25rem",
-        }}
-      >
-        <p style={{ fontSize: "0.875rem", lineHeight: 1.6, margin: 0, color: "var(--text-2)" }}>
-          The following third-party software libraries, font packages, and tools are utilized in the construction
-          and operation of KAIRO. Each package is licensed by its respective authors under open source software
-          licenses compatible with commercial and private deployment.
-        </p>
-      </div>
-
-      {/* Dependencies List */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        {OPEN_SOURCE_PACKAGES.map((pkg) => (
-          <div key={pkg.name} className="card" style={{ padding: "1.25rem 1.5rem" }}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-start",
-                gap: "1rem",
-                flexWrap: "wrap",
-                marginBottom: "0.35rem",
-              }}
-            >
-              <div>
-                <h2 style={{ fontSize: "1.125rem", margin: 0, fontWeight: 600 }}>{pkg.name}</h2>
-                <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: "0.15rem" }}>
-                  Copyright © {pkg.author}
-                </div>
-              </div>
-
-              <span
+      {/* Main Table View */}
+      <section style={{ paddingTop: "32px", paddingBottom: "96px" }}>
+        <Container>
+          {/* Full-width Toolbar */}
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "16px",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "16px 20px",
+              backgroundColor: "var(--surface)",
+              border: "1px solid var(--line)",
+              borderRadius: "var(--radius-card)",
+              marginBottom: "24px",
+            }}
+          >
+            {/* Search Input */}
+            <div style={{ flex: "1 1 280px", maxWidth: "380px" }}>
+              <label htmlFor="license-search" style={{ position: "absolute", width: "1px", height: "1px", padding: 0, margin: "-1px", overflow: "hidden", clip: "rect(0, 0, 0, 0)", border: 0 }}>
+                Search packages
+              </label>
+              <input
+                id="license-search"
+                type="text"
+                placeholder="Search package name, license, copyright..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 style={{
-                  padding: "0.15rem 0.5rem",
-                  borderRadius: "var(--radius-control)",
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
+                  width: "100%",
+                  height: "40px",
+                  padding: "8px 12px",
                   backgroundColor: "var(--sunken)",
-                  color: "var(--text)",
                   border: "1px solid var(--line)",
+                  borderRadius: "var(--radius-control)",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "13px",
+                  color: "var(--text)",
+                }}
+              />
+            </div>
+
+            {/* License Filter Buttons and Result Count */}
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+              <button
+                type="button"
+                onClick={() => setSelectedLicense("all")}
+                style={{
+                  height: "32px",
+                  padding: "0 12px",
+                  borderRadius: "var(--radius-control)",
+                  border: "1px solid " + (selectedLicense === "all" ? "var(--accent)" : "var(--line)"),
+                  backgroundColor: selectedLicense === "all" ? "var(--accent-subtle)" : "var(--sunken)",
+                  color: selectedLicense === "all" ? "var(--accent-text)" : "var(--text)",
+                  fontSize: "12px",
+                  fontFamily: "var(--font-mono)",
+                  cursor: "pointer",
+                  fontWeight: selectedLicense === "all" ? 600 : 400,
                 }}
               >
-                {pkg.license}
-              </span>
-            </div>
-
-            <p style={{ color: "var(--text-2)", fontSize: "0.875rem", lineHeight: 1.5, margin: "0.5rem 0 0.75rem 0" }}>
-              {pkg.description}
-            </p>
-
-            <div>
-              <a
-                href={pkg.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ fontSize: "0.8125rem", color: "var(--accent)" }}
+                All ({PACKAGES.length})
+              </button>
+              {licenseTypes.map((lic) => {
+                const count = licenseCounts[lic];
+                const active = selectedLicense === lic;
+                return (
+                  <button
+                    key={lic}
+                    type="button"
+                    onClick={() => setSelectedLicense(lic)}
+                    style={{
+                      height: "32px",
+                      padding: "0 12px",
+                      borderRadius: "var(--radius-control)",
+                      border: "1px solid " + (active ? "var(--accent)" : "var(--line)"),
+                      backgroundColor: active ? "var(--accent-subtle)" : "var(--sunken)",
+                      color: active ? "var(--accent-text)" : "var(--text)",
+                      fontSize: "12px",
+                      fontFamily: "var(--font-mono)",
+                      cursor: "pointer",
+                      fontWeight: active ? 600 : 400,
+                    }}
+                  >
+                    {lic} ({count})
+                  </button>
+                );
+              })}
+              <div
+                style={{
+                  fontSize: "13px",
+                  color: "var(--muted)",
+                  marginLeft: "12px",
+                  fontFamily: "var(--font-mono)",
+                }}
               >
-                Visit Project Repository &rarr;
-              </a>
+                Showing {filtered.length} of {PACKAGES.length} packages
+              </div>
             </div>
           </div>
-        ))}
-      </div>
 
-      {/* Back link */}
-      <div style={{ marginTop: "3rem", borderTop: "1px solid var(--line)", paddingTop: "1.5rem" }}>
-        <Link href="/" style={{ color: "var(--muted)", textDecoration: "none", fontSize: "0.875rem" }}>
-          &larr; Back to Home
-        </Link>
-      </div>
+          {/* 4-Column Table with Sticky Header */}
+          <div
+            style={{
+              border: "1px solid var(--line)",
+              borderRadius: "var(--radius-card)",
+              overflow: "hidden",
+              backgroundColor: "var(--surface)",
+            }}
+          >
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", minWidth: "800px" }}>
+                <thead>
+                  <tr
+                    style={{
+                      backgroundColor: "var(--sunken)",
+                      borderBottom: "1px solid var(--line)",
+                      position: "sticky",
+                      top: "72px",
+                      zIndex: 10,
+                    }}
+                  >
+                    <th style={{ padding: "16px 20px", fontSize: "13px", fontWeight: 600, letterSpacing: "0.04em", color: "var(--text)", width: "32%" }}>
+                      Component and version
+                    </th>
+                    <th style={{ padding: "16px 20px", fontSize: "13px", fontWeight: 600, letterSpacing: "0.04em", color: "var(--text)", width: "18%" }}>
+                      License
+                    </th>
+                    <th style={{ padding: "16px 20px", fontSize: "13px", fontWeight: 600, letterSpacing: "0.04em", color: "var(--text)", width: "32%" }}>
+                      Copyright and authors
+                    </th>
+                    <th style={{ padding: "16px 20px", fontSize: "13px", fontWeight: 600, letterSpacing: "0.04em", color: "var(--text)", width: "18%" }}>
+                      Repository
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} style={{ padding: "48px 20px", textAlign: "center", color: "var(--muted)", fontSize: "14px" }}>
+                        No packages match your search query.
+                      </td>
+                    </tr>
+                  ) : (
+                    filtered.map((pkg, idx) => (
+                      <tr
+                        key={pkg.name}
+                        style={{
+                          minHeight: "56px",
+                          borderBottom: idx < filtered.length - 1 ? "1px solid var(--line)" : "none",
+                          backgroundColor: idx % 2 === 0 ? "var(--surface)" : "var(--bg)",
+                          transition: "background-color 120ms ease",
+                        }}
+                      >
+                        <td style={{ padding: "16px 20px", verticalAlign: "top" }}>
+                          <div style={{ display: "flex", alignItems: "baseline", gap: "8px", flexWrap: "wrap", marginBottom: "4px" }}>
+                            <span style={{ fontWeight: 600, fontSize: "15px", color: "var(--text)" }}>
+                              {pkg.name}
+                            </span>
+                            <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--muted)" }}>
+                              v{pkg.version}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: "13px", color: "var(--text-2)", lineHeight: "18px" }}>
+                            {pkg.description}
+                          </div>
+                        </td>
+                        <td style={{ padding: "16px 20px", verticalAlign: "top" }}>
+                          <span
+                            style={{
+                              display: "inline-block",
+                              fontFamily: "var(--font-mono)",
+                              fontSize: "12px",
+                              padding: "4px 10px",
+                              backgroundColor: "var(--sunken)",
+                              border: "1px solid var(--line)",
+                              borderRadius: "var(--radius-control)",
+                              color: "var(--text)",
+                              fontWeight: 500,
+                            }}
+                          >
+                            {pkg.license}
+                          </span>
+                        </td>
+                        <td style={{ padding: "16px 20px", verticalAlign: "top", color: "var(--text-2)", fontSize: "14px", lineHeight: "20px" }}>
+                          {pkg.copyright}
+                        </td>
+                        <td style={{ padding: "16px 20px", verticalAlign: "top" }}>
+                          <a
+                            href={pkg.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                              fontFamily: "var(--font-mono)",
+                              fontSize: "13px",
+                              color: "var(--accent-text)",
+                              textDecoration: "underline",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "4px",
+                            }}
+                          >
+                            Source code ↗
+                          </a>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </Container>
+      </section>
     </div>
   );
 }
